@@ -31,7 +31,7 @@ def show_post(request, post_slug):
 
 
 def forum(request):
-    return HttpResponse("Страница форума")
+    return render(request, 'test.html')
 
 
 def competition(request):

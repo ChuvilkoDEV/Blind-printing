@@ -4,17 +4,23 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h1>Авторизация</h1>
+<h1 class="centerFlex">Авторизация</h1>
 
 <form method="post">
     {% csrf_token %}
 
-    <input type="hidden" name="next" value="{{ next }}" />
-    <div class="form-error">{{ form.non_field_errors }}</div>
+    <input type="hidden" name="next" value="{{ next }}"/>
+    <div class="form-error centerFlex">{{ form.non_field_errors }}</div>
     {% for f in form %}
-    <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}</p>
-    <div class="form-error">{{ f.errors }}</div>
+    <div class="centerFlex">
+        <h4><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}</h4>
+        <div class="form-error">{{ f.errors }}</div>
+    </div>
     {% endfor %}
-    <p><button type="submit">Войти</button></p>
+    <div class="centerFlex">
+        <div class="centerFlex">
+            <button class="login">Войти</button>
+        </div>
+    </div>
 </form>
 {% endblock %}
