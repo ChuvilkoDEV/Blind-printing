@@ -2115,6 +2115,7 @@ textarea.w-input, textarea.w-select {
     z-index: 5;
     background-color: rgba(0, 0, 0, 0);
     width: 1030px;
+    height: 6em;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
@@ -2132,20 +2133,21 @@ textarea.w-input, textarea.w-select {
     grid-template-rows: auto auto;
     grid-template-columns: 1fr 1fr;
     grid-auto-columns: 1fr;
-    justify-content: flex-start;
-    align-items: start;
-    justify-items: stretch;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
     width: 100%;
     max-width: 100%;
     margin-left: 0;
     margin-right: 0;
     padding-left: 0;
     padding-right: 0;
-    display: block;
+    display: flex;
     box-shadow: 0 3px 6px -3px rgba(0, 0, 0, .2);
 }
 
 .container {
+    padding-top: 10px;
     width: 100%;
     max-width: 940px;
     margin-left: auto;
@@ -2795,4 +2797,8 @@ textarea.w-input, textarea.w-select {
     font-weight: 600;
     width: 253px;
     height: 50px;
+}
+
+.centerDiv {
+  align-items: center; /* Выравнивание по вертикали */
 }
