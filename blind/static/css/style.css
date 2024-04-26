@@ -2780,14 +2780,15 @@ textarea.w-input, textarea.w-select {
 }
 
 .centerFlex {
-    padding-top: 1em;
+    /*padding-top: 1px;*/
     align-items: center;
     display: flex;
     justify-content: center;
 }
 
 .login {
-    padding: 1em;
+    padding-top: 1em;
+    /*padding-bottom: 20px;*/
     background: #3e4684;
     color: white;
     border: none;

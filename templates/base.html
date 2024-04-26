@@ -8,7 +8,7 @@
     <style>.wf-force-outline-none[tabindex="-1"]:focus {
         outline: none;
     }</style>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{{ title }}</title>
     <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -16,8 +16,7 @@
     <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease"
          role="banner" class="navbar-logo-center-container shadow-three w-nav">
         <div class="container">
-            <div class="navbar-wrapper-three"><a href="https://naval-battle.webflow.io/#"
-                                                 class="navbar-brand-three w-nav-brand"><img
+            <div class="navbar-wrapper-three"><a href="{% url 'index' %}" class="navbar-brand-three w-nav-brand"><img
                     src="{% static 'images/62434fa732124a332512aaee_placeholder-1.svg' %}" loading="lazy" alt=""></a>
                 <nav role="navigation" class="nav-menu-wrapper-three w-nav-menu">
                     <div class="nav-menu-three">

@@ -2,23 +2,23 @@
 
 
 {% block content %}
-<h1 class="centerFlex">Авторизация</h1>
+<h1 class="centerFlex">Регистрация</h1>
 
 <form method="post">
     {% csrf_token %}
 
     <input type="hidden" name="next" value="{{ next }}"/>
     <div class="form-error centerFlex">{{ form.non_field_errors }}</div>
+<!--    <div class="centerFlex">-->
     {% for f in form %}
     <div class="centerFlex">
         <h4><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}</h4>
         <div class="form-error">{{ f.errors }}</div>
     </div>
     {% endfor %}
-    <div class="centerFlex">
         <div class="centerFlex">
             <button class="login">Войти</button>
         </div>
-    </div>
+<!--    </div>-->
 </form>
 {% endblock %}
