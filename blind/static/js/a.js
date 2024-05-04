@@ -1,8 +1,21 @@
-// Получаем элемент контейнера блока
-const blockContainer = document.getElementById('blockContainer');
+inputField = document.getElementById('inputField');
+templateField = document.getElementById("templateField");
 
-// Создаем ссылку как дочерний элемент блока
-const link = document.createElement('a');
-link.href = 'https://www.example.com'; // Указываем URL ссылки
-link.textContent = 'Перейти на страницу'; // Текст ссылки
-blockContainer.appendChild(link);
+// Слушаем событие ввода символа
+document.addEventListener("keydown", function (event) {
+    let symbol = event.key;
+    if (symbol.length === 1 && symbol.match(/[a-zA-Z0-9]/)) {
+        event.preventDefault();
+        if (symbol === templateField.textContent[0]) {
+            inputField.value += symbol;
+            templateField.textContent = templateField.textContent.slice(1);
+        } else {
+            inputField.classList.add('shake');
+            setTimeout(function () {
+                inputField.classList.remove('shake');
+            }, 600);
+        }
+    } else if (event.key === 'Enter') {
+        event.preventDefault();
+    }
+});

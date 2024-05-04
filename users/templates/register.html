@@ -9,16 +9,14 @@
 
     <input type="hidden" name="next" value="{{ next }}"/>
     <div class="form-error centerFlex">{{ form.non_field_errors }}</div>
-<!--    <div class="centerFlex">-->
     {% for f in form %}
     <div class="centerFlex">
         <h4><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}</h4>
         <div class="form-error">{{ f.errors }}</div>
     </div>
     {% endfor %}
-        <div class="centerFlex">
-            <button class="login">Войти</button>
+        <div class="centerFlexButton">
+            <button class="login">Зарегистрироваться</button>
         </div>
-<!--    </div>-->
 </form>
 {% endblock %}

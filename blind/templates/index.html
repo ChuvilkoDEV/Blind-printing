@@ -2,5 +2,14 @@
 
 
 {% block content %}
+{% csrf_token %}
+<div class="typing-zone">
+    <form>
+        {% csrf_token %}
+        <input type="text" class="custom-input" id="inputField" lang="en" autocomplete="off" spellcheck="false"
+               formnovalidate="formnovalidate" style="display: block;">
+    </form>
+    <div id="templateField" class="template_zone">hello</div>
+</div>
 
 {% endblock %}
