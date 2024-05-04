@@ -2809,21 +2809,8 @@ textarea.w-input, textarea.w-select {
     align-items: center; /* Выравнивание по вертикали */
 }
 
-/* Стили для поля ввода */
-.custom-input {
-    width: 300px;
-    height: 40px;
-    padding: 10px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #333;
-    outline: none; /* Убираем обводку при фокусе */
-    justify-content: right;
-}
-
 /* Стили для фокуса поля ввода */
-.custom-input:focus {
+.inputField:focus {
     border-color: #007bff; /* Изменяем цвет рамки при фокусе */
 }
 
@@ -2843,17 +2830,37 @@ textarea.w-input, textarea.w-select {
 }
 
 .typing-zone {
-    display: grid;
-    /*grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); !* Автоматический перенос на новую строку, минимальная ширина статьи 300px *!*/
+    display: inline-block;
+    width: 100%;
     padding-top: 20px; /* Отступ сверху для верхнего блока */
-    padding-right: 20%; /* Отступ справа для боковой стены */
-    margin-left: 20%; /* Отступ слева для боковой стены */
     grid-gap: 20px; /* Расстояние между статьями */
-    justify-content: center;
 }
 
-.template_zone {
+.inputField,
+.templateField {
+    width: 50%;
+    height: 40px;
+    padding: 0;
+    border-top: 1px solid black; /* Замените на нужный вам цвет и толщину */
+    border-bottom: 1px solid black; /* Замените на нужный вам цвет и толщину */
+    border-left: none;
+    border-right: none;
+    font-size: 16px;
+    color: #333;
+    outline: none; /* Убираем обводку при фокусе */
+}
 
+/* Стили для поля ввода */
+.inputField {
+    float: left;
+    justify-content: right;
+    text-align: right;
+}
+
+.templateField {
+    float: right;
+    justify-content: left;
+    text-align: left;
 }
 
 .shake {
