@@ -9,10 +9,13 @@ from blind.utils import DataMixin
 
 class IndexView(DataMixin, TemplateView):
     template_name = 'index.html'
+    extra_context = {
+        'title': 'Главная страница',
+    }
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context, title='Главная страница')
+        context = super().get_context_data(**kwargs, textTemplates=TextTemplates.objects.random().text)
+        return self.get_mixin_context(context, )
 
     def post(self, request, *args, **kwargs):
         # Обработка POST-запроса
@@ -31,18 +34,6 @@ class TheoryView(DataMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context)
-
-
-
-# class BlindView(DataMixin, TemplateView):
-#     template_name = 'theory.html'
-#     extra_context = {
-#         'title': 'Слепая печать',
-#     }
-#
-#     def get(self, request, *args, **kwargs):
-#         context = self.get_context_data(**kwargs)
-#         return self.render_to_response(context)
 
 
 def show_post(request, post_slug):
