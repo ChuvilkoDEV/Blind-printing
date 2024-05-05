@@ -2829,11 +2829,15 @@ textarea.w-input, textarea.w-select {
     }
 }
 
-.typing-zone {
+.statistic-zone {
     display: inline-block;
+}
+
+.typing-zone {
+    display: flex;
     width: 100%;
     padding-top: 20px; /* Отступ сверху для верхнего блока */
-    grid-gap: 20px; /* Расстояние между статьями */
+    /*grid-gap: 20px; !* Расстояние между статьями *!*/
 }
 
 .inputField,
@@ -2845,9 +2849,11 @@ textarea.w-input, textarea.w-select {
     border-bottom: 1px solid black; /* Замените на нужный вам цвет и толщину */
     border-left: none;
     border-right: none;
-    font-size: 16px;
+    font-size: 20px;
     color: #333;
     outline: none; /* Убираем обводку при фокусе */
+    font-family: "Verdana", Georgia, "Times New Roman", serif;
+    overflow: hidden;
 }
 
 /* Стили для поля ввода */
@@ -2861,6 +2867,7 @@ textarea.w-input, textarea.w-select {
     float: right;
     justify-content: left;
     text-align: left;
+    border-left: 1px solid #ff0000;
 }
 
 .shake {

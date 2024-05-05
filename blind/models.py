@@ -2,9 +2,15 @@ from django.db import models
 from django.urls import reverse
 
 
-class Text(models.Model):
-    difficulty = models.CharField(max_length=15)
+class TextTemplates(models.Model):
     text = models.TextField()
+    difficulty = models.CharField(max_length=10, choices=[('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard')],
+                                  default='Medium')
+    character_count = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Текст'
+        verbose_name_plural = 'Текста'
 
 
 class Theory(models.Model):
