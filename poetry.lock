@@ -50,6 +50,23 @@ django = ">=3.2.4"
 sqlparse = ">=0.2"
 
 [[package]]
+name = "django-tables2"
+version = "2.7.0"
+description = "Table/data-grid framework for Django"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-tables2-2.7.0.tar.gz", hash = "sha256:4113fcc575eb438a12e83a4d4ea01452e4800d970e8bdd0e4122ac171af1900d"},
+    {file = "django_tables2-2.7.0-py2.py3-none-any.whl", hash = "sha256:99e06d966ca8ac69fd74092eb45c79a280dd5ca0ccb81395d96261f62128e1af"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[package.extras]
+tablib = ["tablib"]
+
+[[package]]
 name = "sqlparse"
 version = "0.5.0"
 description = "A non-validating SQL parser."
@@ -78,4 +95,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "2a51be60b1ad2a059f882bb02b0a4c9fa2cc68c8491eace7375149e2027e5bc1"
+content-hash = "cd676e61c1fa7bdf99091ae6854dc3efed9428a6592901f82c714499567e7d69"

@@ -1,0 +1,45 @@
+.table-container {
+    display: flex;
+    justify-content: center; /* Выравниваем контейнер по горизонтали по центру */
+    padding-top: 50px;
+    /*align-items: center; !* Выравниваем контейнер по вертикали по центру *!*/
+    /*height: 100vh; !* Задаем высоту контейнера на всю высоту видимой области страницы *!*/
+}
+
+/* Оформление таблицы */
+table {
+    align-self: center;
+    width: 70%;
+    border-collapse: collapse;
+}
+
+/* Стиль для заголовков таблицы */
+th {
+    background-color: #000;
+    /*color: #fff;*/
+    /*text-decoration: none; !* Убираем подчеркивание *!*/
+    padding: 8px;
+    text-align: center;
+}
+
+th.orderable a {
+    color: #fff;
+    text-decoration: none; /* Убираем подчеркивание */
+}
+
+/* Стиль для четных строк */
+.even {
+    background-color: #f9f9f9;
+}
+
+/* Стиль для нечетных строк */
+.odd {
+    background-color: #e6e6e6;
+}
+
+/* Стиль для ячеек таблицы */
+td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}

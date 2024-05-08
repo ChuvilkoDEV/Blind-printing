@@ -3,6 +3,7 @@ from random import randint
 from django.db import models
 from django.db.models import Count
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class TextTemplatesManager(models.Manager):
@@ -13,10 +14,10 @@ class TextTemplatesManager(models.Manager):
 
 
 class TextTemplates(models.Model):
-    text = models.TextField()
+    text = models.TextField(verbose_name="Текст")
     difficulty = models.CharField(max_length=10, choices=[('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard')],
-                                  default='Medium')
-    character_count = models.IntegerField(blank=True, null=True)
+                                  default='Medium', verbose_name="Сложность")
+    character_count = models.IntegerField(blank=True, null=True, verbose_name="Количество символов")
 
     objects = TextTemplatesManager()
 
@@ -25,11 +26,25 @@ class TextTemplates(models.Model):
         verbose_name_plural = 'Текста'
 
 
+class TypingResult(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Имя пользователя', default='anonymous')
+    characters_typed = models.IntegerField(verbose_name='Количество символов')
+    errors_count = models.IntegerField(verbose_name='Количество ошибок')
+    time_taken = models.IntegerField(verbose_name='Время')
+    accuracy = models.FloatField(verbose_name='Аккуратность', blank=True, null=True)
+    print_speed = models.FloatField(verbose_name='Количество символов в минуту', blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+
+    def __str__(self):
+        return f'{self.user.username} - {self.created_at}'
+
+
 class Theory(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
-    content = models.TextField(max_length=4096, db_index=True)
-    date_of_publication = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(max_length=4096, db_index=True, verbose_name="Текст")
+    date_of_publication = models.DateTimeField(auto_now_add=True, verbose_name="Дата публикации")
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})

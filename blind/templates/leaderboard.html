@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+{% load static %}
+
+
+{% block styles %}
+<link href="{% static 'css/leaderboard.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+
+{% block content %}
+
+{% render_table table %}
+
+{% endblock %}
+

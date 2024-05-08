@@ -5,6 +5,7 @@ html {
 }
 
 body {
+    font-family: "Open Sans", sans-serif;
     margin: 0;
 }
 
@@ -2852,7 +2853,7 @@ textarea.w-input, textarea.w-select {
     font-size: 20px;
     color: #333;
     outline: none; /* Убираем обводку при фокусе */
-    font-family: "Verdana", Georgia, "Times New Roman", serif;
+    /*font-family: "Verdana", Georgia, "Times New Roman", serif;*/
     overflow: hidden;
 }
 

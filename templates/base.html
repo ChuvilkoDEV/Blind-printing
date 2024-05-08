@@ -9,7 +9,8 @@
         outline: none;
     }</style>
     <title>{{ title }}</title>
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet" type="text/css">
+    {% block styles %}{% endblock %}
 </head>
 <body>
 <div class="navbar-logo-center">

@@ -46,49 +46,51 @@ templateField = document.getElementById("templateField");
 const csrftoken = getCookie('csrftoken'); 
 let intervalID;
 is_started = false;
-accuracy = 0;
-errors = 0;
+characters_typed = 0;
+errors_count = 0;
 
 // Функция для форматирования времени
-function formatTime(seconds) {
+function formatTime(milliseconds) {
+    const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
 // Функция для форматирования скорости
-function formatSpeed(seconds) {
-    return `${(accuracy / seconds * 60).toFixed(2)}`;
+function formatSpeed(milliseconds) {
+    return `${(characters_typed / milliseconds * 60 * 1000).toFixed(2)}`;
 }
 
 // Функция для форматирования аккуратности
 function formatAccuracy() {
-return `${accuracy}/${errors} (${(accuracy / (accuracy + errors) * 100).toFixed(2)} %)`;
+return `${characters_typed}/${errors_count} (${(characters_typed / (characters_typed + errors_count) * 100).toFixed(2)} %)`;
 }
 
 // Функция для начала замера времени
 function startTimer() {
-	if (!is_started) {
-		is_started = true;
-		startTime = Date.now(); // Запоминаем время начала
-		updateTimer(); // Вызываем функцию обновления времени сразу
-		intervalID = setInterval(updateTimer, 1000); // Обновляем каждую секунду
-	}
+	is_started = true;
+	startTime = Date.now(); // Запоминаем время начала
+	updateTimer(); // Вызываем функцию обновления времени сразу
+	intervalID = setInterval(updateTimer, 1000); // Обновляем каждую секунду
 }
 
 // Функция для обновления времени
 function updateTimer() {
-    const currentTime = Math.floor((Date.now() - startTime) / 1000); // Вычисляем прошедшее время в секундах
-    timerElement.textContent = formatTime(currentTime); // Записываем отформатированное время 
-	speedElement.textContent = formatSpeed(currentTime);
-	accuracyElement.textContent = formatAccuracy(currentTime);
+    const milliseconds = Math.floor((Date.now() - startTime)); // Вычисляем прошедшее время в секундах
+    timerElement.textContent = formatTime(milliseconds); // Записываем отформатированное время 
+	speedElement.textContent = formatSpeed(milliseconds);
+	accuracyElement.textContent = formatAccuracy(milliseconds);
 }
 
 function endTimer() {
+	const milliseconds = Math.floor((Date.now() - startTime));
 	data = {
-		'accuracy': accuracy,
-		'errors': errors,
-		'time': Math.floor((Date.now() - startTime) / 1000),
+		'characters_typed': characters_typed,
+		'errors_count': errors_count,
+		'time_taken': (milliseconds / 1000).toFixed(2),
+		'print_speed': (characters_typed / milliseconds * 60 * 1000).toFixed(2),
+		'accuracy': (characters_typed / (characters_typed + errors_count) * 100).toFixed(2),
 	}
 	clearInterval(intervalID);
 	sendRequest('POST', 'home\\', data)
@@ -104,16 +106,18 @@ document.addEventListener("keydown", function (event) {
         event.preventDefault();
 		updateTimer();
         if (symbol === templateField.value[0]) {
-            startTimer();
+			if (!is_started) {
+				startTimer();
+			}
             inputField.value += symbol;
             templateField.value = templateField.value.slice(1);
-			accuracy += 1
+			characters_typed += 1
 			if (templateField.value.length === 0) {
 				endTimer()
 			}
         } else {
             inputField.classList.add('shake');
-			errors += 1
+			errors_count += 1
             setTimeout(function () {
                 inputField.classList.remove('shake');
             }, 600);

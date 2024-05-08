@@ -16,14 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from blind.views import IndexView, TheoryView, forum, competition, practice, show_post
+from blind.views import IndexView, TheoryView, forum, LeaderboardView, practice, show_post
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('home/', IndexView.as_view(), name='home'),
     path('admin/', admin.site.urls, name='admin'),
     path('forum/', forum, name='forum'),
-    path('competition/', competition, name='competition'),
+    path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
     path('practice/', practice, name='practice'),
     path('theory/', TheoryView.as_view(), name='theory'),
     path('theory/<slug:post_slug>/', show_post, name='theory_article'),

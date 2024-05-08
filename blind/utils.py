@@ -1,6 +1,6 @@
 menu = [
     {'title': "Форум", 'url_name': 'forum'},
-    {'title': "Соревнования", 'url_name': 'competition'},
+    {'title': "Таблица лидеров", 'url_name': 'leaderboard'},
     {'title': "Практика", 'url_name': 'practice'},
     {'title': "Теория", 'url_name': 'theory'},
 ]
