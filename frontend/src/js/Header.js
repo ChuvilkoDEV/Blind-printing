@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useContext} from 'react';
 import logo from '../img/logo.svg'
 import { useParams } from "react-router";
+import { Route, Routes, Link } from "react-router-dom"
 
 const menus = [
   {
@@ -32,30 +33,30 @@ export function Menu() {
 }
 
 export function Image() {
-  return <a href='/'className="navbar-brand-three ">
+  return <Link to='/'className="navbar-brand-three ">
     <img className='navbar-img' src={logo}></img>
-  </a>
+  </Link>
 }
 
 
 export function Profile() {
-  const { isAuthenticated } = useContext(AuthContext);
-  if (isAuthenticated === true) {
-    const { username } = useParams();
-    return (<>{username} | <a href='/users/logout/' className='logout'></a></>)
-  } else {
-    // перенаправляем пользователя на страницу входа [1](https://danshin.ms/simple-login-react-app/)
-  }
+  // const { isAuthenticated } = useContext(AuthContext);
+  // if (isAuthenticated === true) {
+  //   // const { username } = useParams();
+  //   // return (<>{username} | <a href='/users/logout/' className='logout'></a></>)
+  // } else {
+  //   // перенаправляем пользователя на страницу входа [1](https://danshin.ms/simple-login-react-app/)
+  // }
 }
 
 export default class Header extends Component {
   render() {
     return (
-      <>
+      <header class="row text-center">
           <div className='col-5'><Menu /></div>
           <div className='col-2'><Image /></div>
           <div className='col-5'><Profile /></div>
-      </>
+      </header>
     );
   }
 }
