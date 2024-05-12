@@ -32,13 +32,17 @@ ul.menu {
     display: inline;
 }
 
-a.menu, a.logout {
+a.menu, a.logout, a.card {
     color: #1a1b1f;
     text-decoration: none;
 }
 
 a.logout {
     font-weight: 700;
+}
+
+a.card {
+    width: 18em;
 }
 
 li.menu-item {
@@ -52,4 +56,13 @@ li.menu-item {
     display: inline-block;
     overflow-clip-margin: content-box;
     overflow: clip;
+}
+
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    padding-top: 20px;
+    padding-right: 10%;
+    margin-left: 10%;
+    grid-gap: 20px;
 }

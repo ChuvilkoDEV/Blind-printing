@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Count
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.db.models import F, Func, Value
 
 
 class TextTemplatesManager(models.Manager):
@@ -40,11 +41,20 @@ class TypingResult(models.Model):
         return f'{self.user.username} - {self.created_at}'
 
 
+class TheoryManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(short_text=Func(F('content'), Value(50), function='LEFT', output_field=models.CharField()))
+
+
 class Theory(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
-    content = models.TextField(max_length=4096, db_index=True, verbose_name="Текст")
+    content = models.TextField(db_index=True, verbose_name="Текст")
     date_of_publication = models.DateTimeField(auto_now_add=True, verbose_name="Дата публикации")
+    image = models.CharField(max_length=200, blank=True, null=True)
+
+    objects = models.Manager()
+    preview = TheoryManager()
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})

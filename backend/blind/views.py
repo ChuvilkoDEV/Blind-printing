@@ -1,11 +1,13 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from .models import *
 import json
 import django_tables2 as tables
+from rest_framework import generics
 
 from blind.utils import DataMixin
+from .models import *
+from .serializers import TheorySerializer
 
 
 class IndexView(DataMixin, TemplateView):
@@ -65,6 +67,7 @@ class LeaderboardView(DataMixin, tables.SingleTableView):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context)
 
+
 def show_post(request, post_slug):
     return HttpResponse("Страница поста " + post_slug)
 
@@ -75,3 +78,8 @@ def forum(request):
 
 def practice(request):
     return HttpResponse("Страница практики")
+
+
+class TheoryAPIView(generics.ListAPIView):
+    queryset = Theory.objects.all()
+    serializer_class = TheorySerializer

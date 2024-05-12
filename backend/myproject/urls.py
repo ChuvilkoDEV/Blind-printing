@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from blind.views import IndexView, TheoryView, forum, LeaderboardView, practice, show_post
+from blind.views import IndexView, TheoryView, forum, LeaderboardView, practice, show_post, TheoryAPIView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -28,4 +28,5 @@ urlpatterns = [
     path('theory/', TheoryView.as_view(), name='theory'),
     path('theory/<slug:post_slug>/', show_post, name='theory_article'),
     path('users/', include('users.urls', namespace="users")),
+    path('api/v1/theorylist/', TheoryAPIView.as_view())
 ]
