@@ -22,3 +22,6 @@ class TextTemplatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = TextTemplates
         fields = ['id', 'text', 'difficulty', 'character_count']
+        extra_kwargs = {
+            'character_count': {'default': 0}
+        }

@@ -18,7 +18,7 @@ class TextTemplates(models.Model):
     text = models.TextField(verbose_name="Текст")
     difficulty = models.CharField(max_length=10, choices=[('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard')],
                                   default='Medium', verbose_name="Сложность")
-    character_count = models.IntegerField(blank=True, null=True, verbose_name="Количество символов")
+    character_count = models.IntegerField(blank=True, null=True, verbose_name="Количество символов", default=0)
 
     objects = TextTemplatesManager()
 
