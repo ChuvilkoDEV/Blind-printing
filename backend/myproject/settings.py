@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_yasg',
     "django_tables2",
-    'users.apps.UsersConfig',
+    'authentication.apps.AuthenticationConfig',
     'blind.apps.BlindConfig'
 ]
 
@@ -68,7 +69,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR / 'users' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -97,9 +97,10 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
+AUTH_USER_MODEL = 'authentication.User'
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'users.authentication.EmailAuthBackend',
 ]
 
 AUTH_PASSWORD_VALIDATORS = [

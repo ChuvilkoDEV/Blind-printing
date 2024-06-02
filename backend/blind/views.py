@@ -1,13 +1,19 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 import json
 import django_tables2 as tables
 from rest_framework import generics
+from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from blind.utils import DataMixin
 from .models import *
-from .serializers import TheorySerializer
+from .serializers import TheorySerializer, TextTemplatesSerializer
 
 
 class IndexView(DataMixin, TemplateView):
@@ -83,3 +89,17 @@ def practice(request):
 class TheoryAPIView(generics.ListAPIView):
     queryset = Theory.objects.all()
     serializer_class = TheorySerializer
+
+
+class RandomTextView(APIView):
+    @swagger_auto_schema(
+        operation_description="Получить случайный текстовый шаблон",
+        responses={
+            200: TextTemplatesSerializer(),
+            404: 'Текстовые шаблоны не найдены'
+        }
+    )
+    def get(self, request, *args, **kwargs):
+        random_text = TextTemplates.objects.random()
+        serializer = TextTemplatesSerializer(random_text)
+        return Response(serializer.data, status=status.HTTP_200_OK)

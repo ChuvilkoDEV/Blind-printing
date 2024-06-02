@@ -3,7 +3,7 @@ from random import randint
 from django.db import models
 from django.db.models import Count
 from django.urls import reverse
-from django.contrib.auth.models import User
+from authentication.models import User
 from django.db.models import F, Func, Value
 
 

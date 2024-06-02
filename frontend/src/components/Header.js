@@ -2,28 +2,16 @@ import React, { Component, useContext} from 'react';
 import logo from '../img/logo.svg'
 import { useParams } from "react-router";
 import { Route, Routes, Link } from "react-router-dom"
+import Userfront from "@userfront/toolkit/react";
 
 const menus = [
-  {
-    name: 'Форум',
-    href: 'forum\\',
-  },
-  {
-    name: 'Таблица лидеров',
-    href: 'leaderboard\\',
-  },
-  {
-    name: 'Практика',
-    href: 'practice\\',
-  },
-  {
-    name: 'Теория',
-    href: 'theory\\',
-  },
+  {name: 'Форум', href: 'forum\\',},
+  {name: 'Таблица лидеров', href: 'leaderboard\\',},
+  {name: 'Теория', href: 'theory\\',},
 ];
 
 function MenuComponent({ menu }) {
-  return <a href={menu.href} className='menu'>{menu.name}</a>;
+  return <Link to={menu.href} className='link-no-underline'>{menu.name}</Link>;
 }
 
 export function Menu() {
@@ -40,13 +28,21 @@ export function Image() {
 
 
 export function Profile() {
-  // const { isAuthenticated } = useContext(AuthContext);
-  // if (isAuthenticated === true) {
-  //   // const { username } = useParams();
-  //   // return (<>{username} | <a href='/users/logout/' className='logout'></a></>)
-  // } else {
-  //   // перенаправляем пользователя на страницу входа [1](https://danshin.ms/simple-login-react-app/)
-  // }
+  const userData = JSON.stringify(Userfront.user, null, 2);
+  if (userData.length === 2)
+    return (
+      <div>
+        <Link to='login/' className='link-no-underline'>Войти</Link>
+        <Link to='register/' className='btn btn-dark'>Регистрация</Link>
+      </div>
+      );
+  else
+    return (
+      <div>
+        <div>{Userfront.user.username}</div>
+        <button onClick={Userfront.logout}>Logout</button>
+      </div>
+    );
 }
 
 export default class Header extends Component {

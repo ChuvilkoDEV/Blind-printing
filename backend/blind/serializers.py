@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from blind.models import Theory
+from blind.models import Theory, TextTemplates
 
 
 class TheorySerializer(serializers.ModelSerializer):
@@ -16,7 +16,9 @@ class TheorySerializer(serializers.ModelSerializer):
 
     def get_content(self, obj):
         return obj.content[:200]
-# class TheorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Theory
-#         fields = '__all__'
+
+
+class TextTemplatesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TextTemplates
+        fields = ['id', 'text', 'difficulty', 'character_count']

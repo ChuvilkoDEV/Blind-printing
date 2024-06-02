@@ -32,7 +32,7 @@ ul.menu {
     display: inline;
 }
 
-a.menu, a.logout, a.card {
+.link-no-underline {
     color: #1a1b1f;
     text-decoration: none;
 }
