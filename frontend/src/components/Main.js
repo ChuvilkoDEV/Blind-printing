@@ -22,11 +22,20 @@ export default function Main() {
     };
 
     fetchRandomText();
-  }, []);
 
-  const handleChange = (event) => {
-    setInputText(event.target.value);
-  };
+    const handleKeyDown = (event) => {
+      console.log(event.key);
+      setInputText((prevText) => prevText + event.key);
+      console.log(inputText);
+
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const InputField = () => {
     return (
@@ -43,7 +52,6 @@ export default function Main() {
             </span>
           ))}
         </p>
-        <input type="text" value={inputText} onChange={handleChange} />
       </div>
     );
   };
