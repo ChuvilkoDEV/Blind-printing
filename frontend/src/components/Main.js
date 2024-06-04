@@ -42,9 +42,13 @@ class Main extends Component {
   handleKeyDown = (event) => {
     const key = event.key;
     const regex = /^[a-zA-Z0-9а-яА-Я.,?!:;'"()\-]+$/;
+    const lastWord = this.state.inputText.length - 1
 
     if (key === ' ') {
-      if (this.state.inputText[this.state.inputText.length - 1].length !== 0) {
+      if (
+        this.state.inputText[lastWord].length >= this.state.randomText[lastWord].length && 
+        this.state.inputText[lastWord].length !== 0
+      ) {
         this.setState((prevState) => ({
           inputText: [...prevState.inputText, ''],
           keyPressCount: prevState.keyPressCount + 1,
@@ -54,10 +58,13 @@ class Main extends Component {
       return;
     }
 
-    if (key.length === 1 && regex.test(key)) {
+    if (
+      this.state.inputText[lastWord].length < this.state.randomText[lastWord].length + 5 && 
+      key.length === 1 && regex.test(key)
+    ) {
       this.setState((prevState) => {
         const inputText = [...prevState.inputText];
-        inputText[inputText.length - 1] += key;
+        inputText[lastWord] += key;
         return {
           inputText,
           keyPressCount: prevState.keyPressCount + 1,
@@ -67,10 +74,10 @@ class Main extends Component {
     } else if (key === 'Backspace') {
       this.setState((prevState) => {
         const inputText = [...prevState.inputText];
-        if (inputText[inputText.length - 1].length === 0 && inputText.length > 1) {
+        if (inputText[lastWord].length === 0 && inputText.length > 1) {
           inputText.pop();
         } else {
-          inputText[inputText.length - 1] = inputText[inputText.length - 1].slice(0, -1);
+          inputText[lastWord] = inputText[lastWord].slice(0, -1);
         }
         return {
           inputText,
