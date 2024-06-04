@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import '../css/Main.css'; // Импортируем созданный CSS файл
 
 class Main extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class Main extends Component {
       randomText: [],
       inputText: '',
       keyPressCount: 0,
+      loggedEvents: [],
     };
   }
 
@@ -45,11 +47,13 @@ class Main extends Component {
       this.setState((prevState) => ({
         inputText: prevState.inputText + key,
         keyPressCount: prevState.keyPressCount + 1,
+        loggedEvents: [...prevState.loggedEvents, event],
       }));
     } else if (key === 'Backspace' && this.state.inputText.length > 0) {
       this.setState((prevState) => ({
         inputText: prevState.inputText.slice(0, -1),
         keyPressCount: prevState.keyPressCount - 1,
+        loggedEvents: [...prevState.loggedEvents, event],
       }));
     }
   };
@@ -78,14 +82,14 @@ class Game extends Component {
   render() {
     return (
       <div>
-        <p>
+        <p className="main-text">
           {this.props.randomText.map((symbol, index) => (
             <span key={index} style={{ color: this.getColor(symbol, index) }}>
               {index < this.props.inputText.length ? this.props.inputText[index] : symbol}
             </span>
           ))}
         </p>
-        <p>inputedText: {this.props.inputText}</p>
+        <p className="main-text">inputedText: {this.props.inputText}</p>
         <p>Key Press Count: {this.props.keyPressCount}</p>
       </div>
     );
