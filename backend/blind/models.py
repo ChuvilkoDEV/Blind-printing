@@ -37,6 +37,7 @@ class TypingResult(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
 
+
     def __str__(self):
         return f'{self.user.username} - {self.created_at}'
 

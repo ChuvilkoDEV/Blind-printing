@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 import '../css/Main.css'; // Импортируем созданный CSS файл
 
@@ -60,7 +60,7 @@ class Main extends Component {
 
   render() {
     return (
-      <div>
+      <div className="main-container">
         <Game
           randomText={this.state.randomText}
           inputText={this.state.inputText}
@@ -82,13 +82,13 @@ class Game extends Component {
   render() {
     return (
       <div>
-        <p className="main-text">
+        <p className="main-text"><b>
           {this.props.randomText.map((symbol, index) => (
-            <span key={index} style={{ color: this.getColor(symbol, index) }}>
+            <span key={index} style={{color: this.getColor(symbol, index)}}>
               {index < this.props.inputText.length ? this.props.inputText[index] : symbol}
             </span>
           ))}
-        </p>
+        </b></p>
         <p className="main-text">inputedText: {this.props.inputText}</p>
         <p>Key Press Count: {this.props.keyPressCount}</p>
       </div>

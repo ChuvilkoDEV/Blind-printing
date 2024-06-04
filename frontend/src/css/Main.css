@@ -1,4 +1,14 @@
+/* Main.css */
+
+
+
+.main-container {
+  margin: 20px; /* Задаем отступы от краев экрана */
+  padding: 10px;
+  /*border: 1px solid #ccc;*/
+}
+
 .main-text {
-    font-family: 'Courier New', Courier, monospace;
-  }
-  
+  font-family: 'MonaspaceNeon', 'Courier New', Courier, monospace; /* Используем новый шрифт */
+  font-size: 20px;
+}
