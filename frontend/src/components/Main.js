@@ -8,13 +8,12 @@ class Main extends Component {
       randomTextData: [],
       randomText: [],
       inputText: '',
-      keyPressCount: 0,  // Добавляем новый state для счетчика нажатий клавиш
+      keyPressCount: 0,
     };
   }
 
   componentDidMount() {
     this.fetchRandomText();
-
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
@@ -28,7 +27,7 @@ class Main extends Component {
       if (response.data && response.data.text) {
         this.setState({
           randomTextData: response.data,
-          randomText: response.data.text.split(''),  // Преобразуем строку в массив символов
+          randomText: response.data.text.split(''),
         });
       } else {
         console.error('Response data is not in the expected format:', response.data);
@@ -40,18 +39,17 @@ class Main extends Component {
 
   handleKeyDown = (event) => {
     const key = event.key;
-    var regex = /^[ a-zA-Z0-9а-яА-Я.,?!:;'"()\-]+$/;
-    
-    if (key.length == 1 && regex.test(key)) {
+    const regex = /^[ a-zA-Z0-9а-яА-Я.,?!:;'"()\-]+$/;
+
+    if (key.length === 1 && regex.test(key) && this.state.inputText.length < this.state.randomText.length) {
       this.setState((prevState) => ({
         inputText: prevState.inputText + key,
-        keyPressCount: prevState.keyPressCount + 1,  // Увеличиваем счетчик
+        keyPressCount: prevState.keyPressCount + 1,
       }));
     } else if (key === 'Backspace' && this.state.inputText.length > 0) {
-      console.log(1)
       this.setState((prevState) => ({
         inputText: prevState.inputText.slice(0, -1),
-        keyPressCount: prevState.keyPressCount - 1,  // Увеличиваем счетчик
+        keyPressCount: prevState.keyPressCount - 1,
       }));
     }
   };
@@ -62,7 +60,7 @@ class Main extends Component {
         <Game
           randomText={this.state.randomText}
           inputText={this.state.inputText}
-          keyPressCount={this.state.keyPressCount}  // Передаем счетчик в компонент Game
+          keyPressCount={this.state.keyPressCount}
         />
       </div>
     );
@@ -70,23 +68,25 @@ class Main extends Component {
 }
 
 class Game extends Component {
+  getColor = (symbol, index) => {
+    if (index >= this.props.inputText.length) {
+      return 'gray';
+    }
+    return this.props.inputText[index] === symbol ? 'green' : 'red';
+  };
+
   render() {
     return (
       <div>
         <p>
           {this.props.randomText.map((symbol, index) => (
-            <span
-              key={index}
-              style={{
-                color: this.props.inputText[index] === symbol ? 'green' : 'red',
-              }}
-            >
-              {symbol}
+            <span key={index} style={{ color: this.getColor(symbol, index) }}>
+              {index < this.props.inputText.length ? this.props.inputText[index] : symbol}
             </span>
           ))}
         </p>
         <p>inputedText: {this.props.inputText}</p>
-        <p>Key Press Count: {this.props.keyPressCount}</p>  {/* Отображаем счетчик */}
+        <p>Key Press Count: {this.props.keyPressCount}</p>
       </div>
     );
   }
