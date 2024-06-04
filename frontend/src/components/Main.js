@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import '../css/Main.css'; // Импортируем созданный CSS файл
+import '../css/Main.css'; // Import the created CSS file
 
 class Main extends Component {
   constructor(props) {
@@ -8,7 +8,7 @@ class Main extends Component {
     this.state = {
       randomTextData: [],
       randomText: [],
-      inputText: '',
+      inputText: [''],
       keyPressCount: 0,
       loggedEvents: [],
     };
@@ -29,7 +29,7 @@ class Main extends Component {
       if (response.data && response.data.text) {
         this.setState({
           randomTextData: response.data,
-          randomText: response.data.text.split(''),
+          randomText: response.data.text.split(' '),
         });
       } else {
         console.error('Response data is not in the expected format:', response.data);
@@ -41,11 +41,22 @@ class Main extends Component {
 
   handleKeyDown = (event) => {
     const key = event.key;
-    const regex = /^[ a-zA-Z0-9а-яА-Я.,?!:;'"()\-]+$/;
+    const regex = /^[a-zA-Z0-9а-яА-Я.,?!:;'"()\-]+$/;
 
-    if (key.length === 1 && regex.test(key) && this.state.inputText.length < this.state.randomText.length) {
+    if (key === ' ') {
+      if (this.state.inputText[-1].length !== 0) {
+        this.setState((prevState) => ({
+          inputText: prevState.inputText.push(''),
+          keyPressCount: prevState.keyPressCount + 1,
+          loggedEvents: [...prevState.loggedEvents, event],
+        }));
+      }
+      return;
+    }
+    
+    if (key.length === 1 && regex.test(key) && this.state.inputText.length < this.state.randomText.join(' ').length) {
       this.setState((prevState) => ({
-        inputText: prevState.inputText + key,
+        inputText: prevState.inputText[-1] + key,
         keyPressCount: prevState.keyPressCount + 1,
         loggedEvents: [...prevState.loggedEvents, event],
       }));
@@ -72,20 +83,25 @@ class Main extends Component {
 }
 
 class Game extends Component {
-  getColor = (symbol, index) => {
-    if (index >= this.props.inputText.length) {
+  getColor = (symbol, wordIndex, symbolIndex) => {
+    if (wordIndex >= this.props.inputText.length || symbolIndex >= this.props.inputText[wordIndex].length) {
       return 'gray';
     }
-    return this.props.inputText[index] === symbol ? 'green' : 'red';
+    return this.props.inputText[wordIndex][symbolIndex] === symbol ? 'green' : 'red';
   };
 
   render() {
     return (
       <div>
         <p className="main-text"><b>
-          {this.props.randomText.map((symbol, index) => (
-            <span key={index} style={{color: this.getColor(symbol, index)}}>
-              {index < this.props.inputText.length ? this.props.inputText[index] : symbol}
+          {this.props.randomText.map((word, wordIndex) => (
+            <span key={wordIndex}>
+              {word.split('').map((symbol, symbolIndex) => (
+                <span key={wordIndex + '-' + symbolIndex} style={{color: this.getColor(symbol, symbolIndex)}}>
+                  {symbol}
+                </span>
+              ))}
+              {' '}
             </span>
           ))}
         </b></p>
