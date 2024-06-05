@@ -1,5 +1,3 @@
-import './bootstrap.min.css';
-import './css/style.css'
 import Header from './components/Header';
 import React from "react";
 import { Route, Routes } from "react-router-dom";
@@ -11,7 +9,7 @@ import PasswordReset from './components/PasswordReset';
 import axios from "axios"
 import Userfront from "@userfront/toolkit/react";
 
-Userfront.init("demo1234");
+// Userfront.init("demo1234");
 function App() {
   return (<>
     <Header />
