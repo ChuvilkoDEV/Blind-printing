@@ -42,7 +42,7 @@ class Main extends Component {
 
   handleKeyDown = (event) => {
     const key = event.key;
-    const regex = /^[a-zA-Z0-9а-яА-Я.,?!:;'"()\-]+$/;
+    const regex = /^[a-zA-Zа-яА-Я.,?!:;'"()\-]+$/; // убираем цифры из регулярного выражения
     const lastWord = this.state.inputText.length - 1;
 
     if (key === ' ') {
@@ -116,31 +116,35 @@ class Game extends Component {
 
   render() {
     let charCount = 0;
-    const maxWordLength = Math.max(...this.props.randomText.map(w => w.length)) + 5;
     return (
       <div>
         <p className="main-text">
           <b>
-            {this.props.randomText.map((word, wordIndex) => (
-              <span key={wordIndex}>
-                {
-                Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
-                  const expectedSymbol = word[symbolIndex] || '';  // Существующий символ или пустая строка
-                  const inputWord = this.props.inputText[wordIndex] || '';
-                  const inputSymbol = inputWord[symbolIndex] || '';  // Существующий символ или пустая строка
-                  const color = this.getColor(expectedSymbol, inputSymbol);
-                  const showCursor = charCount === this.props.cursorPosition;
-                  charCount++;
-                  return (
-                    <span key={wordIndex + '-' + symbolIndex} style={{ position: 'relative', color: color }}>
-                      {inputSymbol || expectedSymbol}
-                      {showCursor && <span className="cursor"></span>}
-                    </span>
-                  );
-                })}
-                {' '}
-              </span>
-            ))}
+            {this.props.randomText.map((word, wordIndex) => {
+              const maxWordLength = Math.max(
+                this.props.randomText[wordIndex]?.length || 0,
+                this.props.inputText[wordIndex]?.length || 0
+              ); // Определяем длину самого длинного слова по индексу
+              return (
+                <span key={wordIndex}>
+                  {Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
+                    const expectedSymbol = word[symbolIndex] || '';  // Существующий символ или пустая строка
+                    const inputWord = this.props.inputText[wordIndex] || '';
+                    const inputSymbol = inputWord[symbolIndex] || '';  // Существующий символ или пустая строка
+                    const color = this.getColor(expectedSymbol, inputSymbol);
+                    const showCursor = charCount === this.props.cursorPosition;
+                    charCount++;
+                    return (
+                      <span key={wordIndex + '-' + symbolIndex} style={{ position: 'relative', color: color }}>
+                        {inputSymbol || expectedSymbol}
+                        {showCursor && <span className="cursor"></span>}
+                      </span>
+                    );
+                  })}
+                  <span style={{ visibility: 'hidden' }}>{charCount++}</span> {/* Учитываем пробел, но не выводим его */}
+                </span>
+              );
+            })}
           </b>
         </p>
         <p className="main-text">inputedText: {this.props.inputText.join(' ')}</p>
