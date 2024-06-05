@@ -8,7 +8,7 @@ class Main extends Component {
     this.state = {
       randomTextData: [],
       randomText: [],
-      inputedText: [''],
+      inputText: [''],
       keyPressCount: 0,
       loggedEvents: [],
       cursorPosition: 0, // добавляем позицию курсора в состояние
@@ -43,15 +43,15 @@ class Main extends Component {
   handleKeyDown = (event) => {
     const key = event.key;
     const regex = /^[a-zA-Z0-9а-яА-Я.,?!:;'"()\-]+$/;
-    const lastWord = this.state.inputedText.length - 1;
+    const lastWord = this.state.inputText.length - 1;
 
     if (key === ' ') {
       if (
-        this.state.inputedText[lastWord].length >= this.state.randomText[lastWord].length &&
-        this.state.inputedText[lastWord].length !== 0
+        this.state.inputText[lastWord].length >= this.state.randomText[lastWord].length &&
+        this.state.inputText[lastWord].length !== 0
       ) {
         this.setState((prevState) => ({
-          inputedText: [...prevState.inputedText, ''],
+          inputText: [...prevState.inputText, ''],
           keyPressCount: prevState.keyPressCount + 1,
           loggedEvents: [...prevState.loggedEvents, event],
           cursorPosition: prevState.cursorPosition + 1, // обновляем позицию курсора
@@ -61,14 +61,14 @@ class Main extends Component {
     }
 
     if (
-      this.state.inputedText[lastWord].length < this.state.randomText[lastWord].length + 5 &&
+      this.state.inputText[lastWord].length < this.state.randomText[lastWord].length + 5 &&
       key.length === 1 && regex.test(key)
     ) {
       this.setState((prevState) => {
-        const inputedText = [...prevState.inputedText];
-        inputedText[lastWord] += key;
+        const inputText = [...prevState.inputText];
+        inputText[lastWord] += key;
         return {
-          inputedText,
+          inputText,
           keyPressCount: prevState.keyPressCount + 1,
           loggedEvents: [...prevState.loggedEvents, event],
           cursorPosition: prevState.cursorPosition + 1, // обновляем позицию курсора
@@ -76,14 +76,14 @@ class Main extends Component {
       });
     } else if (key === 'Backspace') {
       this.setState((prevState) => {
-        const inputedText = [...prevState.inputedText];
-        if (inputedText[lastWord].length === 0 && inputedText.length > 1) {
-          inputedText.pop();
+        const inputText = [...prevState.inputText];
+        if (inputText[lastWord].length === 0 && inputText.length > 1) {
+          inputText.pop();
         } else {
-          inputedText[lastWord] = inputedText[lastWord].slice(0, -1);
+          inputText[lastWord] = inputText[lastWord].slice(0, -1);
         }
         return {
-          inputedText,
+          inputText,
           keyPressCount: prevState.keyPressCount - 1,
           loggedEvents: [...prevState.loggedEvents, event],
           cursorPosition: prevState.cursorPosition - 1, // обновляем позицию курсора
@@ -97,7 +97,7 @@ class Main extends Component {
       <div className="main-container">
         <Game
           randomText={this.state.randomText}
-          inputedText={this.state.inputedText}
+          inputText={this.state.inputText}
           keyPressCount={this.state.keyPressCount}
           cursorPosition={this.state.cursorPosition} // передаем позицию курсора
         />
@@ -107,31 +107,33 @@ class Main extends Component {
 }
 
 class Game extends Component {
-  getColor = (symbol, wordIndex, symbolIndex) => {
-    if (
-      wordIndex >= this.props.inputedText.length ||
-      symbolIndex >= this.props.inputedText[wordIndex].length
-    ) {
+  getColor = (expectedSymbol, inputSymbol) => {
+    if (inputSymbol === '') {
       return 'gray';
     }
-    return this.props.inputedText[wordIndex][symbolIndex] === symbol ? 'green' : 'red';
+    return expectedSymbol === inputSymbol ? 'green' : 'red';
   };
 
   render() {
     let charCount = 0;
+    const maxWordLength = Math.max(...this.props.randomText.map(w => w.length)) + 5;
     return (
       <div>
         <p className="main-text">
           <b>
             {this.props.randomText.map((word, wordIndex) => (
               <span key={wordIndex}>
-                {word.split('').map((symbol, symbolIndex) => {
-                  const color = this.getColor(symbol, wordIndex, symbolIndex);
+                {
+                Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
+                  const expectedSymbol = word[symbolIndex] || '';  // Существующий символ или пустая строка
+                  const inputWord = this.props.inputText[wordIndex] || '';
+                  const inputSymbol = inputWord[symbolIndex] || '';  // Существующий символ или пустая строка
+                  const color = this.getColor(expectedSymbol, inputSymbol);
                   const showCursor = charCount === this.props.cursorPosition;
                   charCount++;
                   return (
                     <span key={wordIndex + '-' + symbolIndex} style={{ position: 'relative', color: color }}>
-                      {symbol}
+                      {inputSymbol || expectedSymbol}
                       {showCursor && <span className="cursor"></span>}
                     </span>
                   );
@@ -141,7 +143,7 @@ class Game extends Component {
             ))}
           </b>
         </p>
-        <p className="main-text">inputedText: {this.props.inputedText.join(' ')}</p>
+        <p className="main-text">inputedText: {this.props.inputText.join(' ')}</p>
         <p>Key Press Count: {this.props.keyPressCount}</p>
       </div>
     );
