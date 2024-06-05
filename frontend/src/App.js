@@ -9,7 +9,6 @@ import PasswordReset from './components/PasswordReset';
 import axios from "axios"
 import Userfront from "@userfront/toolkit/react";
 
-// Userfront.init("demo1234");
 function App() {
   return (<>
     <Header />
