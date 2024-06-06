@@ -53,23 +53,27 @@ class Main extends Component {
     handleKeyDown = (event) => {
         const { key } = event;
         const regex = /^[a-zA-Zа-яА-Я0-9.,?!:;"'()[\]{}-]+$/;
-
-        if (key === ' ') {
-            this.handleSpaceKey();
-            return;
-        }
+        const lastWord = this.state.inputText.length - 1;
 
         if (key === 'Backspace') {
-            this.handleBackspaceKey();
+            this.handleBackspaceKey(event);
             return;
         }
 
-        if (key.length === 1 && regex.test(key)) {
-            this.handleCharacterKey(key);
+        if (key === ' ') {
+            this.handleSpaceKey(event);
+            return;
+        }
+
+        if (
+            this.state.inputText[lastWord].length < this.state.randomText[lastWord].length + 5 &&
+            key.length === 1 && regex.test(key)
+        ) {
+            this.handleCharacterKey(key, event);
         }
     };
 
-    handleSpaceKey = () => {
+    handleSpaceKey = (event) => {
         const lastWord = this.state.inputText.length - 1;
         if (
             this.state.inputText[lastWord].length >= this.state.randomText[lastWord].length &&
@@ -78,13 +82,13 @@ class Main extends Component {
             this.setState((prevState) => ({
                 inputText: [...prevState.inputText, ''],
                 keyPressCount: prevState.keyPressCount + 1,
-                loggedEvents: [...prevState.loggedEvents, { key: ' ' }],
+                loggedEvents: [...prevState.loggedEvents, event],
                 cursorPosition: prevState.cursorPosition + 1,
             }));
         }
     };
 
-    handleBackspaceKey = () => {
+    handleBackspaceKey = (event) => {
         this.setState((prevState) => {
             const inputText = [...prevState.inputText];
             const lastWord = inputText.length - 1;
@@ -95,19 +99,18 @@ class Main extends Component {
             }
             return {
                 inputText,
-                keyPressCount: prevState.keyPressCount - 1,
-                loggedEvents: [...prevState.loggedEvents, { key: 'Backspace' }],
+                loggedEvents: [...prevState.loggedEvents, event],
                 cursorPosition: prevState.cursorPosition - 1,
             };
         });
     };
 
-    handleCharacterKey = (key) => {
+    handleCharacterKey = (key, event) => {
         this.setState((prevState) => {
             const inputText = [...prevState.inputText];
             const lastWord = inputText.length - 1;
             const errorCount =
-                inputText[lastWord].length < this.state.randomText[lastWord].length &&
+                inputText[lastWord].length > this.state.randomText[lastWord].length ||
                     key !== this.state.randomText[lastWord][inputText[lastWord].length]
                     ? prevState.errorCount + 1
                     : prevState.errorCount;
@@ -115,7 +118,7 @@ class Main extends Component {
             return {
                 inputText,
                 keyPressCount: prevState.keyPressCount + 1,
-                loggedEvents: [...prevState.loggedEvents, { key }],
+                loggedEvents: [...prevState.loggedEvents, event],
                 cursorPosition: prevState.cursorPosition + 1,
                 errorCount,
             };
@@ -196,8 +199,30 @@ class Game extends Component {
         return expectedSymbol === inputSymbol ? 'green' : 'red';
     };
 
+    renderWord = (word, wordIndex, maxWordLength, charCountRef) => {
+        return (
+            <span key={wordIndex}>
+                {Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
+                    const expectedSymbol = word[symbolIndex] || '';  // Existing character or empty string
+                    const inputWord = this.props.inputText[wordIndex] || '';
+                    const inputSymbol = inputWord[symbolIndex] || '';  // Existing character or empty string
+                    const color = this.getColor(expectedSymbol, inputSymbol);
+                    const showCursor = charCountRef.current === this.props.cursorPosition;
+                    charCountRef.current++;
+                    return (
+                        <span key={wordIndex + '-' + symbolIndex} style={{ position: 'relative', color: color }}>
+                            {inputSymbol || expectedSymbol}
+                            {showCursor && <span className="cursor"></span>}
+                        </span>
+                    );
+                })}
+                <span style={{ visibility: 'hidden' }}>{charCountRef.current++}</span>
+            </span>
+        );
+    }
+
     render() {
-        let charCount = 0;
+        const charCountRef = { current: 0 };
         return (
             <div>
                 <p className="main-text">
@@ -207,25 +232,7 @@ class Game extends Component {
                                 this.props.randomText[wordIndex]?.length || 0,
                                 this.props.inputText[wordIndex]?.length || 0
                             ); // Determine the length of the longest word by index
-                            return (
-                                <span key={wordIndex}>
-                                    {Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
-                                        const expectedSymbol = word[symbolIndex] || '';  // Existing character or empty string
-                                        const inputWord = this.props.inputText[wordIndex] || '';
-                                        const inputSymbol = inputWord[symbolIndex] || '';  // Existing character or empty string
-                                        const color = this.getColor(expectedSymbol, inputSymbol);
-                                        const showCursor = charCount === this.props.cursorPosition;
-                                        charCount++;
-                                        return (
-                                            <span key={wordIndex + '-' + symbolIndex} style={{ position: 'relative', color: color }}>
-                                                {inputSymbol || expectedSymbol}
-                                                {showCursor && <span className="cursor"></span>}
-                                            </span>
-                                        );
-                                    })}
-                                    <span style={{ visibility: 'hidden' }}>{charCount++}</span> {/* Consider space but don't display it */}
-                                </span>
-                            );
+                            return this.renderWord(word, wordIndex, maxWordLength, charCountRef);
                         })}
                     </b>
                 </p>
