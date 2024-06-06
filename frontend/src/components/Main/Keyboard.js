@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { layouts } from './keyboardLayouts';
-import '../../css/Keyboard.css'; // Создайте и подключите CSS файл для стилей
+import '../../css/Keyboard.css';
 
 const Keyboard = () => {
     const [currentLayout, setCurrentLayout] = useState('йцукен');
@@ -32,8 +32,13 @@ const Keyboard = () => {
                 {layouts[currentLayout].map((line, index) => (
                     <div className="line" key={index}>
                         {line.map((key, keyIndex) => (
-                            <div key={keyIndex} className={`key ${key.length > 1 ? 'sup' : ''}`}>
-                                {key}
+                            <div
+                                key={keyIndex}
+                                className={`key ${key.sup ? 'sup' : ''} ${key.main === 'Space' ? 'space' : ''} ${key.main.includes('Shift') ? 'shift' : ''}`}
+                            >
+                                <span className="main">{key.main}
+                                    {key.sup && <sup className="sup">{key.sup}</sup>}
+                                </span>
                             </div>
                         ))}
                     </div>

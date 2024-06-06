@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 20px;
 }
 
 .line {
@@ -21,13 +22,17 @@
     text-align: center;
     font-size: 14px;
     cursor: pointer;
-}
-
-.key.sup {
+    flex: 1;
+    max-width: 60px;
+    box-sizing: border-box;
     position: relative;
 }
 
-.key.sup sup {
+.key .main {
+    display: block;
+}
+
+.key .sup {
     position: absolute;
     top: -5px;
     right: -5px;
@@ -35,11 +40,26 @@
     color: #666;
 }
 
+.key .finger {
+    display: block;
+    font-size: 10px;
+    color: #888;
+}
+
+.key.space {
+    flex: 7;
+}
+
+.key.shift {
+    flex: 2;
+}
+
 .select {
     margin-bottom: 10px;
 }
 
-.link, .link-2 {
+.link,
+.link-2 {
     text-decoration: none;
     color: #000;
     cursor: pointer;
