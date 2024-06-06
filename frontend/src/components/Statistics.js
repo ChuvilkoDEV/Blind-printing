@@ -27,18 +27,24 @@ class Statistics extends Component {
         const totalCount = correctCount + errorCount;
 
         return (
-            <div className="statistics">
-                <div className="stat-item">
-                    <FontAwesomeIcon icon={faClock} />
-                    <span>{this.formatTime(elapsedTime)}</span>
-                </div>
-                <div className="stat-item">
-                    <FontAwesomeIcon icon={faCheckCircle} />
-                    <span>{this.formatAccuracy(correctCount, totalCount)}</span>
-                </div>
-                <div className="stat-item">
-                    <FontAwesomeIcon icon={faTachometerAlt} />
-                    <span>{this.formatSpeed(keyPressCount, elapsedTime)} chars/min</span>
+            <div className="container-fluid">
+                <div className="row justify-content-end">
+                    <div className="col-4">
+                        <div className="statistics d-flex justify-content-end">
+                            <div className="stat-item d-flex align-items-center me-3">
+                                <FontAwesomeIcon icon={faClock} />
+                                <span className="ms-2">{this.formatTime(elapsedTime)}</span>
+                            </div>
+                            <div className="stat-item d-flex align-items-center me-3">
+                                <FontAwesomeIcon icon={faCheckCircle} />
+                                <span className="ms-2">{this.formatAccuracy(correctCount, totalCount)}</span>
+                            </div>
+                            <div className="stat-item d-flex align-items-center">
+                                <FontAwesomeIcon icon={faTachometerAlt} />
+                                <span className="ms-2">{this.formatSpeed(keyPressCount, elapsedTime)} chars/min</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

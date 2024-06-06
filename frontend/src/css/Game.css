@@ -1,0 +1,41 @@
+/* Game.css */
+.game-cursor {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 2px;
+    height: 20px;
+    background-color: black;
+    animation: game-blink 1s step-end infinite;
+}
+
+@keyframes game-blink {
+
+    from,
+    to {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.game-container {
+    margin: 0 40px;
+    /* Отступы слева и справа */
+    padding: 10px;
+    /* Внутренние отступы */
+    border: 2px solid #ccc;
+    /* Добавляем рамку */
+    border-radius: 15px;
+    /* Закругляем углы */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Добавляем тень */
+}
+
+.game-text {
+    font-family: 'MonaspaceNeon', 'Courier New', Courier, monospace;
+    /* Используем новый шрифт */
+    font-size: 20px;
+}

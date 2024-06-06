@@ -1,28 +1,11 @@
 /* Main.css */
-
-.cursor {
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 2px;
-  height: 20px;
-  background-color: black;
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  from, to {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
 .main-container {
-  margin: 20px; /* Задаем отступы от краев экрана */
-  padding: 10px;
-  /*border: 1px solid #ccc;*/
+  margin: 0 100px; /* Отступы слева и справа */
+  margin-top: 20px;
+  padding: 10px; /* Внутренние отступы */
+  /* border: 2px solid #ccc;  Добавляем рамку 
+  border-radius: 15px; Закругляем углы */
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); Добавляем тень */
 }
 
 .main-text {

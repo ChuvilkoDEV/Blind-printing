@@ -1,22 +1,11 @@
 /* Statistics.css */
 .statistics {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    font-size: 1.2em;
-}
-
-.stat-item span {
-    margin-left: 8px;
+    width: 33.33%;
+    font-size: 15px; /* Reduced font size */
+    align-items: right;
 }
 
 .stat-item svg {
-    font-size: 1.5em;
+    font-size: 15px; /* Adjusted icon size */
     color: #333;
 }
