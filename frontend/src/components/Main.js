@@ -2,58 +2,61 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import '../css/Main.css';
 
+// Главный компонент
 class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            randomTextData: [],
-            randomText: [],
-            inputText: [''],
-            keyPressCount: 0,
-            loggedEvents: [],
-            cursorPosition: 0,
-            errorCount: 0,
-            startTime: null,
-            typingSpeed: 0,
+            textData: [],          // Данные с текстом, полученные с сервера
+            expectedText: [],      // Ожидаемый текст, разбитый на слова
+            userInput: [''],       // Ввод пользователя, разбитый на слова
+            keyPressCount: 0,      // Количество нажатий клавиш
+            keyEvents: [],         // Лог событий нажатия клавиш
+            cursorPosition: 0,     // Текущая позиция курсора
+            errorCount: 0,         // Количество ошибок
+            startTime: null,       // Время начала печати
+            typingSpeed: 0,        // Скорость печати (символы в минуту)
         };
-        this.intervalId = null;
+        this.intervalId = null;   // Идентификатор интервала для обновления скорости печати
     }
 
     componentDidMount() {
-        this.fetchRandomText();
-        document.addEventListener('keydown', this.handleKeyDown);
-        const startTime = new Date();
+        this.fetchTextData();     // Получение текста с сервера при монтировании компонента
+        document.addEventListener('keydown', this.handleKeyDown);  // Добавление слушателя событий нажатия клавиш
+        const startTime = new Date();  // Установка времени начала
         this.setState({ startTime });
-        this.intervalId = setInterval(this.updateTypingSpeed, 1000);
+        this.intervalId = setInterval(this.updateTypingSpeed, 1000);  // Установка интервала для обновления скорости печати каждую секунду
     }
 
     componentWillUnmount() {
-        document.removeEventListener('keydown', this.handleKeyDown);
+        document.removeEventListener('keydown', this.handleKeyDown);  // Удаление слушателя событий нажатия клавиш
         if (this.intervalId) {
-            clearInterval(this.intervalId);
+            clearInterval(this.intervalId);  // Очистка интервала при размонтировании компонента
         }
     }
 
-    fetchRandomText = async () => {
+    // Получение текста с сервера
+    fetchTextData = async () => {
         try {
             const response = await axios.get('http://localhost:8000/api/v1/random-text/');
             if (response.data && response.data.text) {
                 this.setState({
-                    randomTextData: response.data,
-                    randomText: response.data.text.split(' '),
+                    textData: response.data,
+                    expectedText: response.data.text.split(' '),
                 });
             } else {
                 console.error('Response data is not in the expected format:', response.data);
             }
         } catch (error) {
-            console.error('Error fetching random text:', error);
+            console.error('Error fetching text data:', error);
         }
     };
 
+    // Обработчик событий нажатия клавиш
     handleKeyDown = (event) => {
         const { key } = event;
         const regex = /^[a-zA-Zа-яА-Я0-9.,?!:;"'()[\]{}-]+$/;
-        const lastWord = this.state.inputText.length - 1;
+        const lastWordIndex = this.state.userInput.length - 1;
 
         if (key === 'Backspace') {
             this.handleBackspaceKey(event);
@@ -66,81 +69,86 @@ class Main extends Component {
         }
 
         if (
-            this.state.inputText[lastWord].length < this.state.randomText[lastWord].length + 5 &&
+            this.state.userInput[lastWordIndex].length < this.state.expectedText[lastWordIndex].length + 5 &&
             key.length === 1 && regex.test(key)
         ) {
             this.handleCharacterKey(key, event);
         }
     };
 
+    // Обработка нажатия клавиши пробела
     handleSpaceKey = (event) => {
-        const lastWord = this.state.inputText.length - 1;
+        const lastWordIndex = this.state.userInput.length - 1;
         if (
-            this.state.inputText[lastWord].length >= this.state.randomText[lastWord].length &&
-            this.state.inputText[lastWord].length !== 0
+            this.state.userInput[lastWordIndex].length >= this.state.expectedText[lastWordIndex].length &&
+            this.state.userInput[lastWordIndex].length !== 0
         ) {
             this.setState((prevState) => ({
-                inputText: [...prevState.inputText, ''],
+                userInput: [...prevState.userInput, ''],
                 keyPressCount: prevState.keyPressCount + 1,
-                loggedEvents: [...prevState.loggedEvents, event],
+                keyEvents: [...prevState.keyEvents, event],
                 cursorPosition: prevState.cursorPosition + 1,
             }));
         }
     };
 
+    // Обработка нажатия клавиши Backspace
     handleBackspaceKey = (event) => {
         this.setState((prevState) => {
-            const inputText = [...prevState.inputText];
-            const lastWord = inputText.length - 1;
-            if (inputText[lastWord].length === 0 && inputText.length > 1) {
-                inputText.pop();
+            const userInput = [...prevState.userInput];
+            const lastWordIndex = userInput.length - 1;
+            if (userInput[lastWordIndex].length === 0 && userInput.length > 1) {
+                userInput.pop();
             } else {
-                inputText[lastWord] = inputText[lastWord].slice(0, -1);
+                userInput[lastWordIndex] = userInput[lastWordIndex].slice(0, -1);
             }
             return {
-                inputText,
-                loggedEvents: [...prevState.loggedEvents, event],
+                userInput,
+                keyEvents: [...prevState.keyEvents, event],
                 cursorPosition: prevState.cursorPosition - 1,
             };
         });
     };
 
+    // Обработка ввода символов
     handleCharacterKey = (key, event) => {
         this.setState((prevState) => {
-            const inputText = [...prevState.inputText];
-            const lastWord = inputText.length - 1;
+            const userInput = [...prevState.userInput];
+            const lastWordIndex = userInput.length - 1;
             const errorCount =
-                inputText[lastWord].length > this.state.randomText[lastWord].length ||
-                    key !== this.state.randomText[lastWord][inputText[lastWord].length]
+                userInput[lastWordIndex].length > this.state.expectedText[lastWordIndex].length ||
+                    key !== this.state.expectedText[lastWordIndex][userInput[lastWordIndex].length]
                     ? prevState.errorCount + 1
                     : prevState.errorCount;
-            inputText[lastWord] += key;
+            userInput[lastWordIndex] += key;
             return {
-                inputText,
+                userInput,
                 keyPressCount: prevState.keyPressCount + 1,
-                loggedEvents: [...prevState.loggedEvents, event],
+                keyEvents: [...prevState.keyEvents, event],
                 cursorPosition: prevState.cursorPosition + 1,
                 errorCount,
             };
         });
     };
 
+    // Обновление скорости печати
     updateTypingSpeed = () => {
         const { keyPressCount, startTime } = this.state;
         const currentTime = new Date();
-        const elapsedTime = (currentTime - startTime) / 1000 / 60; // Time in minutes
-        const typingSpeed = keyPressCount / elapsedTime; // Typing speed (characters per minute)
+        const elapsedTime = (currentTime - startTime) / 1000 / 60; // Время в минутах
+        const typingSpeed = keyPressCount / elapsedTime; // Скорость печати (символы в минуту)
         this.setState({ typingSpeed });
     };
 
+    // Вычисление точности
     calculateAccuracy() {
-        const { inputText, randomText, keyPressCount } = this.state;
+        const { userInput, expectedText, keyPressCount } = this.state;
         let correctCount = 0;
 
-        randomText.forEach((word, wordIndex) => {
-            if (inputText[wordIndex]) {
+        expectedText.forEach((word, wordIndex) => {
+            if (userInput[wordIndex]) {
                 word.split('').forEach((char, charIndex) => {
-                    if (char === inputText[wordIndex][charIndex]) {
+                    if (char === userInput[wordIndex][charIndex]) {
                         correctCount++;
                     }
                 });
@@ -151,7 +159,7 @@ class Main extends Component {
     }
 
     render() {
-        const { keyPressCount, cursorPosition, inputText, errorCount, typingSpeed } = this.state;
+        const { keyPressCount, cursorPosition, userInput, errorCount, typingSpeed } = this.state;
         const accuracy = this.calculateAccuracy();
 
         return (
@@ -159,14 +167,14 @@ class Main extends Component {
                 <Statistics
                     keyPressCount={keyPressCount}
                     cursorPosition={cursorPosition}
-                    inputText={inputText}
+                    userInput={userInput}
                     errorCount={errorCount}
                     accuracy={accuracy}
                     typingSpeed={typingSpeed}
                 />
                 <Game
-                    randomText={this.state.randomText}
-                    inputText={inputText}
+                    expectedText={this.state.expectedText}
+                    userInput={userInput}
                     keyPressCount={keyPressCount}
                     cursorPosition={cursorPosition}
                 />
@@ -175,14 +183,15 @@ class Main extends Component {
     }
 }
 
+// Компонент для отображения статистики
 class Statistics extends Component {
     render() {
-        const { keyPressCount, cursorPosition, inputText, errorCount, accuracy, typingSpeed } = this.props;
+        const { keyPressCount, cursorPosition, userInput, errorCount, accuracy, typingSpeed } = this.props;
         return (
             <div className="statistics">
                 <p>Key Press Count: {keyPressCount}</p>
                 <p>Cursor Position: {cursorPosition}</p>
-                <p>Input Text: {inputText.join(' ')}</p>
+                <p>User Input: {userInput.join(' ')}</p>
                 <p>Error Count: {errorCount}</p>
                 <p>Accuracy: {accuracy.toFixed(2)}%</p>
                 <p>Typing Speed: {typingSpeed.toFixed(2)} chars/min</p>
@@ -191,7 +200,9 @@ class Statistics extends Component {
     }
 }
 
+// Компонент для отображения игры
 class Game extends Component {
+    // Определение цвета символа (правильный/неправильный/не введен)
     getColor = (expectedSymbol, inputSymbol) => {
         if (inputSymbol === '') {
             return 'gray';
@@ -199,13 +210,14 @@ class Game extends Component {
         return expectedSymbol === inputSymbol ? 'green' : 'red';
     };
 
+    // Отображение слова с подсветкой символов
     renderWord = (word, wordIndex, maxWordLength, charCountRef) => {
         return (
             <span key={wordIndex}>
                 {Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
-                    const expectedSymbol = word[symbolIndex] || '';  // Existing character or empty string
-                    const inputWord = this.props.inputText[wordIndex] || '';
-                    const inputSymbol = inputWord[symbolIndex] || '';  // Existing character or empty string
+                    const expectedSymbol = word[symbolIndex] || '';  // Существующий символ или пустая строка
+                    const inputWord = this.props.userInput[wordIndex] || '';
+                    const inputSymbol = inputWord[symbolIndex] || '';  // Существующий символ или пустая строка
                     const color = this.getColor(expectedSymbol, inputSymbol);
                     const showCursor = charCountRef.current === this.props.cursorPosition;
                     charCountRef.current++;
@@ -227,16 +239,16 @@ class Game extends Component {
             <div>
                 <p className="main-text">
                     <b>
-                        {this.props.randomText.map((word, wordIndex) => {
+                        {this.props.expectedText.map((word, wordIndex) => {
                             const maxWordLength = Math.max(
-                                this.props.randomText[wordIndex]?.length || 0,
-                                this.props.inputText[wordIndex]?.length || 0
-                            ); // Determine the length of the longest word by index
+                                this.props.expectedText[wordIndex]?.length || 0,
+                                this.props.userInput[wordIndex]?.length || 0
+                            ); // Определение длины самого длинного слова по индексу
                             return this.renderWord(word, wordIndex, maxWordLength, charCountRef);
                         })}
                     </b>
                 </p>
-                <p className="main-text">inputedText: {this.props.inputText.join(' ')}</p>
+                <p className="main-text">User Input: {this.props.userInput.join(' ')}</p>
             </div>
         );
     }
