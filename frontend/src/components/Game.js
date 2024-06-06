@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/Game.css';  // Подключаем новый CSS файл
+import '../css/Game.css'; // Подключаем новый CSS файл
 
 class Game extends Component {
     // Определение цвета символа в зависимости от правильности
@@ -13,11 +13,11 @@ class Game extends Component {
     // Отображение слова с символами
     renderWord = (word, wordIndex, maxWordLength, charCountRef) => {
         return (
-            <span key={wordIndex}>
+            <span key={wordIndex} className="game-word">
                 {Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
-                    const expectedSymbol = word[symbolIndex] || '';  // Существующий символ или пустая строка
+                    const expectedSymbol = word[symbolIndex] || ''; // Существующий символ или пустая строка
                     const inputWord = this.props.userInput[wordIndex] || '';
-                    const inputSymbol = inputWord[symbolIndex] || '';  // Существующий символ или пустая строка
+                    const inputSymbol = inputWord[symbolIndex] || ''; // Существующий символ или пустая строка
                     const color = this.getColor(expectedSymbol, inputSymbol);
                     const showCursor = charCountRef.current === this.props.cursorPosition;
                     charCountRef.current++;
@@ -48,7 +48,6 @@ class Game extends Component {
                         })}
                     </b>
                 </p>
-                <p className="game-text">User Input: {this.props.userInput.join(' ')}</p>
             </div>
         );
     }

@@ -22,20 +22,23 @@
 }
 
 .game-container {
-    margin: 0 40px;
-    /* Отступы слева и справа */
-    padding: 10px;
-    /* Внутренние отступы */
+    margin: 0 15%;
+    padding: 30px;
     border: 2px solid #ccc;
-    /* Добавляем рамку */
-    border-radius: 15px;
-    /* Закругляем углы */
+    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Добавляем тень */
 }
 
 .game-text {
     font-family: 'MonaspaceNeon', 'Courier New', Courier, monospace;
-    /* Используем новый шрифт */
     font-size: 20px;
+    white-space: normal;
+    /* Allow normal line breaks */
+    overflow-wrap: break-word;
+    /* Break long words */
+}
+
+.game-word {
+    display: inline-block;
+    margin-right: 10px;
 }

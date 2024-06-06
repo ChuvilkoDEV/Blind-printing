@@ -29,20 +29,18 @@ class Statistics extends Component {
         return (
             <div className="container-fluid">
                 <div className="row justify-content-end">
-                    <div className="col-4">
-                        <div className="statistics d-flex justify-content-end">
-                            <div className="stat-item d-flex align-items-center me-3">
-                                <FontAwesomeIcon icon={faClock} />
-                                <span className="ms-2">{this.formatTime(elapsedTime)}</span>
-                            </div>
-                            <div className="stat-item d-flex align-items-center me-3">
-                                <FontAwesomeIcon icon={faCheckCircle} />
-                                <span className="ms-2">{this.formatAccuracy(correctCount, totalCount)}</span>
-                            </div>
-                            <div className="stat-item d-flex align-items-center">
-                                <FontAwesomeIcon icon={faTachometerAlt} />
-                                <span className="ms-2">{this.formatSpeed(keyPressCount, elapsedTime)} chars/min</span>
-                            </div>
+                    <div className="statistics d-flex justify-content-end">
+                        <div className="stat-item">
+                            <FontAwesomeIcon icon={faClock} />
+                            <span className="ms-2">{this.formatTime(elapsedTime)}</span>
+                        </div>
+                        <div className="stat-item">
+                            <FontAwesomeIcon icon={faCheckCircle} />
+                            <span className="ms-2">{this.formatAccuracy(correctCount, totalCount)}</span>
+                        </div>
+                        <div className="stat-item">
+                            <FontAwesomeIcon icon={faTachometerAlt} />
+                            <span className="ms-2">{this.formatSpeed(keyPressCount, elapsedTime)} chars/min</span>
                         </div>
                     </div>
                 </div>
