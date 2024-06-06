@@ -178,8 +178,8 @@ class Main extends Component {
         return (
             <div className="main-container">
                 <Statistics
-                    accuracy={accuracy}
-                    typingSpeed={typingSpeed}
+                    keyPressCount={keyPressCount}
+                    errorCount={errorCount}
                     elapsedTime={elapsedTime}
                 />
                 <Game

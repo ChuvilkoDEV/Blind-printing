@@ -14,14 +14,14 @@ class Statistics extends Component {
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
-    // Форматируем скорость набора текста (символов в минуту)
-    formatSpeed(keyPressCount, elapsedTime) {
-        return `${((keyPressCount / elapsedTime) * 60).toFixed(2)}`;
-    }
-
     // Форматируем точность набора текста в процентах
     formatAccuracy(correctCount, totalCount) {
-        return `${((correctCount / totalCount) * 100).toFixed(2)}%`;
+        return `${totalCount ? ((correctCount / totalCount) * 100).toFixed(2) : 0}`;
+    }
+
+    // Форматируем скорость набора текста (символов в минуту)
+    formatSpeed(keyPressCount, elapsedTime) {
+        return `${elapsedTime ? ((keyPressCount / elapsedTime) * 60).toFixed(2) : 0}`;
     }
 
     // Метод render для отображения компонента
@@ -42,12 +42,12 @@ class Statistics extends Component {
                         <div className="stat-item">
                             {/* Иконка точности и отображение отформатированной точности */}
                             <FontAwesomeIcon icon={faCheckCircle} className="icon" />
-                            <span className="ms-2">{this.formatAccuracy(correctCount, totalCount)}</span>
+                            <span className="ms-2">{this.formatAccuracy(correctCount, totalCount)}%</span>
                         </div>
                         <div className="stat-item">
                             {/* Иконка скорости и отображение отформатированной скорости */}
                             <FontAwesomeIcon icon={faTachometerAlt} className="icon" />
-                            <span className="ms-2">{this.formatSpeed(keyPressCount, elapsedTime)} chars/min</span>
+                            <span className="ms-2">{this.formatSpeed(keyPressCount, elapsedTime)} C/M</span>
                         </div>
                     </div>
                 </div>
