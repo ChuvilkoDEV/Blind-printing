@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/Game.css'; // Подключаем новый CSS файл
+import '../../css/Game.css'; // Подключаем новый CSS файл
 
 class Game extends Component {
     // Определение цвета символа в зависимости от правильности

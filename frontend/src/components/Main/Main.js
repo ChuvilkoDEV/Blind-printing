@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Statistics, { updateTypingSpeed } from './Statistics'; // Импорт функции updateTypingSpeed
 import Game from './Game';
-import '../css/Main.css';
+import Keyboard from './Keyboard';
+import '../../css/Main.css';
 
 // Главный компонент
 class Main extends Component {
@@ -160,6 +161,7 @@ class Main extends Component {
                     keyPressCount={keyPressCount}
                     cursorPosition={cursorPosition}
                 />
+                <Keyboard/>
             </div>
         );
     }

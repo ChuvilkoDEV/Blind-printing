@@ -1,7 +1,7 @@
 import Header from './components/Header';
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Main from "./components/Main";
+import Main from "./components/Main/Main";
 import Theory from './components/Theory';
 import Login from './components/Login';
 import SignUp from './components/SignUp';

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
-import '../css/Statistics.css';
+import '../../css/Statistics.css';
 
 export function updateTypingSpeed(setStateCallback, keyPressCount, startTime) {
     const currentTime = new Date();
