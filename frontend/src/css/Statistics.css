@@ -2,7 +2,6 @@
 .statistics {
     margin: 0 15%;
     font-size: 20px;
-    /* Reduced font size */
     align-items: right;
 }
 
@@ -10,16 +9,13 @@
     display: flex;
     align-items: center;
     margin-right: 2rem;
-    /* Increased margin between items */
 }
 
 .stat-item:last-child {
     margin-right: 0;
-    /* Remove margin from the last item */
 }
 
-.stat-item svg {
+.stat-item .icon {
     font-size: 20px;
-    /* Adjusted icon size */
-    color: #333;
+    color: #007bff;
 }

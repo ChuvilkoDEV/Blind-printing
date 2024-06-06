@@ -1,26 +1,30 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faTachometerAlt, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 import '../css/Statistics.css';
 
+
 class Statistics extends Component {
-    // Format time
+    // Форматируем время в минуты и секунды
     formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
-    // Format typing speed
+    // Форматируем скорость набора текста (символов в минуту)
     formatSpeed(keyPressCount, elapsedTime) {
         return `${((keyPressCount / elapsedTime) * 60).toFixed(2)}`;
     }
 
-    // Format accuracy
+    // Форматируем точность набора текста в процентах
     formatAccuracy(correctCount, totalCount) {
         return `${((correctCount / totalCount) * 100).toFixed(2)}%`;
     }
 
+    // Метод render для отображения компонента
     render() {
         const { keyPressCount, errorCount, elapsedTime } = this.props;
         const correctCount = keyPressCount - errorCount;
@@ -31,15 +35,18 @@ class Statistics extends Component {
                 <div className="row justify-content-end">
                     <div className="statistics d-flex justify-content-end">
                         <div className="stat-item">
-                            <FontAwesomeIcon icon={faClock} />
+                            {/* Иконка времени и отображение отформатированного времени */}
+                            <FontAwesomeIcon icon={faClock} className="icon" />
                             <span className="ms-2">{this.formatTime(elapsedTime)}</span>
                         </div>
                         <div className="stat-item">
-                            <FontAwesomeIcon icon={faCheckCircle} />
+                            {/* Иконка точности и отображение отформатированной точности */}
+                            <FontAwesomeIcon icon={faCheckCircle} className="icon" />
                             <span className="ms-2">{this.formatAccuracy(correctCount, totalCount)}</span>
                         </div>
                         <div className="stat-item">
-                            <FontAwesomeIcon icon={faTachometerAlt} />
+                            {/* Иконка скорости и отображение отформатированной скорости */}
+                            <FontAwesomeIcon icon={faTachometerAlt} className="icon" />
                             <span className="ms-2">{this.formatSpeed(keyPressCount, elapsedTime)} chars/min</span>
                         </div>
                     </div>
@@ -49,4 +56,5 @@ class Statistics extends Component {
     }
 }
 
+// Экспортируем компонент Statistics для использования в других частях приложения
 export default Statistics;
