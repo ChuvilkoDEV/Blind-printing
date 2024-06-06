@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import '../css/Main.css'; // Импортируем созданный CSS файл
+import '../css/Main.css';
 
 class Main extends Component {
     constructor(props) {
@@ -51,64 +51,82 @@ class Main extends Component {
     };
 
     handleKeyDown = (event) => {
-        const key = event.key;
-        const regex = /^[a-zA-Zа-яА-Я0-9.,?!:;'"()\-]+$/;
-        const lastWord = this.state.inputText.length - 1;
+        const { key } = event;
+        const regex = /^[a-zA-Zа-яА-Я0-9.,?!:;"'()[\]{}-]+$/;
 
         if (key === ' ') {
-            if (
-                this.state.inputText[lastWord].length >= this.state.randomText[lastWord].length &&
-                this.state.inputText[lastWord].length !== 0
-            ) {
-                this.setState((prevState) => ({
-                    inputText: [...prevState.inputText, ''],
-                    keyPressCount: prevState.keyPressCount + 1,
-                    loggedEvents: [...prevState.loggedEvents, event],
-                    cursorPosition: prevState.cursorPosition + 1,
-                }));
-            }
+            this.handleSpaceKey();
             return;
         }
 
-        if (
-            this.state.inputText[lastWord].length < this.state.randomText[lastWord].length + 5 &&
-            key.length === 1 && regex.test(key)
-        ) {
-            this.setState((prevState) => {
-                const inputText = [...prevState.inputText];
-                const errorCount = inputText[lastWord].length < this.state.randomText[lastWord].length && key !== this.state.randomText[lastWord][inputText[lastWord].length] ? prevState.errorCount + 1 : prevState.errorCount;
-                inputText[lastWord] += key;
-                return {
-                    inputText,
-                    keyPressCount: prevState.keyPressCount + 1,
-                    loggedEvents: [...prevState.loggedEvents, event],
-                    cursorPosition: prevState.cursorPosition + 1,
-                    errorCount: errorCount,
-                };
-            });
-        } else if (key === 'Backspace') {
-            this.setState((prevState) => {
-                const inputText = [...prevState.inputText];
-                if (inputText[lastWord].length === 0 && inputText.length > 1) {
-                    inputText.pop();
-                } else {
-                    inputText[lastWord] = inputText[lastWord].slice(0, -1);
-                }
-                return {
-                    inputText,
-                    keyPressCount: prevState.keyPressCount - 1,
-                    loggedEvents: [...prevState.loggedEvents, event],
-                    cursorPosition: prevState.cursorPosition - 1,
-                };
-            });
+        if (key === 'Backspace') {
+            this.handleBackspaceKey();
+            return;
         }
+
+        if (key.length === 1 && regex.test(key)) {
+            this.handleCharacterKey(key);
+        }
+    };
+
+    handleSpaceKey = () => {
+        const lastWord = this.state.inputText.length - 1;
+        if (
+            this.state.inputText[lastWord].length >= this.state.randomText[lastWord].length &&
+            this.state.inputText[lastWord].length !== 0
+        ) {
+            this.setState((prevState) => ({
+                inputText: [...prevState.inputText, ''],
+                keyPressCount: prevState.keyPressCount + 1,
+                loggedEvents: [...prevState.loggedEvents, { key: ' ' }],
+                cursorPosition: prevState.cursorPosition + 1,
+            }));
+        }
+    };
+
+    handleBackspaceKey = () => {
+        this.setState((prevState) => {
+            const inputText = [...prevState.inputText];
+            const lastWord = inputText.length - 1;
+            if (inputText[lastWord].length === 0 && inputText.length > 1) {
+                inputText.pop();
+            } else {
+                inputText[lastWord] = inputText[lastWord].slice(0, -1);
+            }
+            return {
+                inputText,
+                keyPressCount: prevState.keyPressCount - 1,
+                loggedEvents: [...prevState.loggedEvents, { key: 'Backspace' }],
+                cursorPosition: prevState.cursorPosition - 1,
+            };
+        });
+    };
+
+    handleCharacterKey = (key) => {
+        this.setState((prevState) => {
+            const inputText = [...prevState.inputText];
+            const lastWord = inputText.length - 1;
+            const errorCount =
+                inputText[lastWord].length < this.state.randomText[lastWord].length &&
+                    key !== this.state.randomText[lastWord][inputText[lastWord].length]
+                    ? prevState.errorCount + 1
+                    : prevState.errorCount;
+            inputText[lastWord] += key;
+            return {
+                inputText,
+                keyPressCount: prevState.keyPressCount + 1,
+                loggedEvents: [...prevState.loggedEvents, { key }],
+                cursorPosition: prevState.cursorPosition + 1,
+                errorCount,
+            };
+        });
     };
 
     updateTypingSpeed = () => {
         const { keyPressCount, startTime } = this.state;
         const currentTime = new Date();
-        const elapsedTime = (currentTime - startTime) / 1000 / 60; // Время в минутах
-        const typingSpeed = keyPressCount / elapsedTime; // Скорость печати (символов в минуту)
+        const elapsedTime = (currentTime - startTime) / 1000 / 60; // Time in minutes
+        const typingSpeed = keyPressCount / elapsedTime; // Typing speed (characters per minute)
         this.setState({ typingSpeed });
     };
 
@@ -188,13 +206,13 @@ class Game extends Component {
                             const maxWordLength = Math.max(
                                 this.props.randomText[wordIndex]?.length || 0,
                                 this.props.inputText[wordIndex]?.length || 0
-                            ); // Определяем длину самого длинного слова по индексу
+                            ); // Determine the length of the longest word by index
                             return (
                                 <span key={wordIndex}>
                                     {Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
-                                        const expectedSymbol = word[symbolIndex] || '';  // Существующий символ или пустая строка
+                                        const expectedSymbol = word[symbolIndex] || '';  // Existing character or empty string
                                         const inputWord = this.props.inputText[wordIndex] || '';
-                                        const inputSymbol = inputWord[symbolIndex] || '';  // Существующий символ или пустая строка
+                                        const inputSymbol = inputWord[symbolIndex] || '';  // Existing character or empty string
                                         const color = this.getColor(expectedSymbol, inputSymbol);
                                         const showCursor = charCount === this.props.cursorPosition;
                                         charCount++;
@@ -205,7 +223,7 @@ class Game extends Component {
                                             </span>
                                         );
                                     })}
-                                    <span style={{ visibility: 'hidden' }}>{charCount++}</span> {/* Учитываем пробел, но не выводим его */}
+                                    <span style={{ visibility: 'hidden' }}>{charCount++}</span> {/* Consider space but don't display it */}
                                 </span>
                             );
                         })}
