@@ -6,8 +6,6 @@ import Theory from './components/Theory';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import PasswordReset from './components/PasswordReset';
-import axios from "axios"
-import Userfront from "@userfront/toolkit/react";
 
 function App() {
   return (<>

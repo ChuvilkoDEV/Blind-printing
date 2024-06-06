@@ -11,17 +11,27 @@ class Main extends Component {
             inputText: [''],
             keyPressCount: 0,
             loggedEvents: [],
-            cursorPosition: 0, // добавляем позицию курсора в состояние
+            cursorPosition: 0,
+            errorCount: 0,
+            startTime: null,
+            typingSpeed: 0,
         };
+        this.intervalId = null;
     }
 
     componentDidMount() {
         this.fetchRandomText();
         document.addEventListener('keydown', this.handleKeyDown);
+        const startTime = new Date();
+        this.setState({ startTime });
+        this.intervalId = setInterval(this.updateTypingSpeed, 1000);
     }
 
     componentWillUnmount() {
         document.removeEventListener('keydown', this.handleKeyDown);
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
     }
 
     fetchRandomText = async () => {
@@ -54,7 +64,7 @@ class Main extends Component {
                     inputText: [...prevState.inputText, ''],
                     keyPressCount: prevState.keyPressCount + 1,
                     loggedEvents: [...prevState.loggedEvents, event],
-                    cursorPosition: prevState.cursorPosition + 1, // обновляем позицию курсора
+                    cursorPosition: prevState.cursorPosition + 1,
                 }));
             }
             return;
@@ -66,12 +76,14 @@ class Main extends Component {
         ) {
             this.setState((prevState) => {
                 const inputText = [...prevState.inputText];
+                const errorCount = inputText[lastWord].length < this.state.randomText[lastWord].length && key !== this.state.randomText[lastWord][inputText[lastWord].length] ? prevState.errorCount + 1 : prevState.errorCount;
                 inputText[lastWord] += key;
                 return {
                     inputText,
                     keyPressCount: prevState.keyPressCount + 1,
                     loggedEvents: [...prevState.loggedEvents, event],
-                    cursorPosition: prevState.cursorPosition + 1, // обновляем позицию курсора
+                    cursorPosition: prevState.cursorPosition + 1,
+                    errorCount: errorCount,
                 };
             });
         } else if (key === 'Backspace') {
@@ -86,46 +98,77 @@ class Main extends Component {
                     inputText,
                     keyPressCount: prevState.keyPressCount - 1,
                     loggedEvents: [...prevState.loggedEvents, event],
-                    cursorPosition: prevState.cursorPosition - 1, // обновляем позицию курсора
+                    cursorPosition: prevState.cursorPosition - 1,
                 };
             });
         }
     };
 
+    updateTypingSpeed = () => {
+        const { keyPressCount, startTime } = this.state;
+        const currentTime = new Date();
+        const elapsedTime = (currentTime - startTime) / 1000 / 60; // Время в минутах
+        const typingSpeed = keyPressCount / elapsedTime; // Скорость печати (символов в минуту)
+        this.setState({ typingSpeed });
+    };
+
+    calculateAccuracy() {
+        const { inputText, randomText, keyPressCount } = this.state;
+        let correctCount = 0;
+
+        randomText.forEach((word, wordIndex) => {
+            if (inputText[wordIndex]) {
+                word.split('').forEach((char, charIndex) => {
+                    if (char === inputText[wordIndex][charIndex]) {
+                        correctCount++;
+                    }
+                });
+            }
+        });
+
+        return (correctCount / keyPressCount) * 100 || 0;
+    }
+
     render() {
+        const { keyPressCount, cursorPosition, inputText, errorCount, typingSpeed } = this.state;
+        const accuracy = this.calculateAccuracy();
+
         return (
             <div className="main-container">
                 <Statistics
-                    keyPressCount={this.state.keyPressCount}
-                    cursorPosition={this.state.cursorPosition}
-                    inputText={this.state.inputText}
+                    keyPressCount={keyPressCount}
+                    cursorPosition={cursorPosition}
+                    inputText={inputText}
+                    errorCount={errorCount}
+                    accuracy={accuracy}
+                    typingSpeed={typingSpeed}
                 />
                 <Game
                     randomText={this.state.randomText}
-                    inputText={this.state.inputText}
-                    keyPressCount={this.state.keyPressCount}
-                    cursorPosition={this.state.cursorPosition} // передаем позицию курсора
+                    inputText={inputText}
+                    keyPressCount={keyPressCount}
+                    cursorPosition={cursorPosition}
                 />
             </div>
         );
     }
 }
 
-
-
 class Statistics extends Component {
     render() {
+        const { keyPressCount, cursorPosition, inputText, errorCount, accuracy, typingSpeed } = this.props;
         return (
             <div className="statistics">
-                <p>Key Press Count: {this.props.keyPressCount}</p>
-                <p>Cursor Position: {this.props.cursorPosition}</p>
-                <p>Input Text: {this.props.inputText.join(' ')}</p>
+                <p>Key Press Count: {keyPressCount}</p>
+                <p>Cursor Position: {cursorPosition}</p>
+                <p>Input Text: {inputText.join(' ')}</p>
+                <p>Error Count: {errorCount}</p>
+                <p>Accuracy: {accuracy.toFixed(2)}%</p>
+                <p>Typing Speed: {typingSpeed.toFixed(2)} chars/min</p>
             </div>
         );
     }
 }
-
-
 
 class Game extends Component {
     getColor = (expectedSymbol, inputSymbol) => {
@@ -173,6 +216,5 @@ class Game extends Component {
         );
     }
 }
-
 
 export default Main;
