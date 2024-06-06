@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Statistics from './Statistics';
+import Statistics, { updateTypingSpeed } from './Statistics'; // Импорт функции updateTypingSpeed
 import Game from './Game';
 import '../css/Main.css';
 
@@ -127,7 +127,7 @@ class Main extends Component {
             if (!isTypingStarted) {
                 startTime = new Date();
                 isTypingStarted = true;
-                this.intervalId = setInterval(this.updateTypingSpeed, 1000); // Установка интервала для обновления скорости печати каждую секунду
+                this.intervalId = setInterval(() => updateTypingSpeed(this.setState.bind(this), prevState.keyPressCount, startTime), 1000); // Установка интервала для обновления скорости печати каждую секунду
             }
 
             return {
@@ -142,36 +142,8 @@ class Main extends Component {
         });
     };
 
-    // Обновление скорости печати
-    updateTypingSpeed = () => {
-        const { keyPressCount, startTime } = this.state;
-        const currentTime = new Date();
-        const elapsedTime = (currentTime - startTime) / 1000 / 60; // Время в минутах
-        const typingSpeed = keyPressCount / elapsedTime; // Скорость печати (символы в минуту)
-        this.setState({ typingSpeed });
-    };
-
-    // Вычисление точности
-    calculateAccuracy() {
-        const { userInput, expectedText, keyPressCount } = this.state;
-        let correctCount = 0;
-
-        expectedText.forEach((word, wordIndex) => {
-            if (userInput[wordIndex]) {
-                word.split('').forEach((char, charIndex) => {
-                    if (char === userInput[wordIndex][charIndex]) {
-                        correctCount++;
-                    }
-                });
-            }
-        });
-
-        return (correctCount / keyPressCount) * 100 || 0;
-    }
-
     render() {
         const { keyPressCount, cursorPosition, userInput, errorCount, typingSpeed, startTime, isTypingStarted } = this.state;
-        const accuracy = this.calculateAccuracy();
         const currentTime = new Date();
         const elapsedTime = isTypingStarted ? Math.floor((currentTime - startTime) / 1000) : 0;
 

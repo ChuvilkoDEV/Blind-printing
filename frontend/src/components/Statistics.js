@@ -5,6 +5,12 @@ import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 import '../css/Statistics.css';
 
+export function updateTypingSpeed(setStateCallback, keyPressCount, startTime) {
+    const currentTime = new Date();
+    const elapsedTime = (currentTime - startTime) / 1000 / 60; // Время в минутах
+    const typingSpeed = keyPressCount / elapsedTime; // Скорость печати (символы в минуту)
+    setStateCallback({ typingSpeed });
+}
 
 class Statistics extends Component {
     // Форматируем время в минуты и секунды
@@ -56,5 +62,5 @@ class Statistics extends Component {
     }
 }
 
-// Экспортируем компонент Statistics для использования в других частях приложения
+
 export default Statistics;
