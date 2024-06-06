@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Statistics from './Statistics';
+import Game from './Game';
 import '../css/Main.css';
 
 // Главный компонент
@@ -16,6 +18,7 @@ class Main extends Component {
             errorCount: 0,         // Количество ошибок
             startTime: null,       // Время начала печати
             typingSpeed: 0,        // Скорость печати (символы в минуту)
+            isTypingStarted: false // Флаг, указывающий, начата ли печать
         };
         this.intervalId = null;   // Идентификатор интервала для обновления скорости печати
     }
@@ -23,9 +26,6 @@ class Main extends Component {
     componentDidMount() {
         this.fetchTextData();     // Получение текста с сервера при монтировании компонента
         document.addEventListener('keydown', this.handleKeyDown);  // Добавление слушателя событий нажатия клавиш
-        const startTime = new Date();  // Установка времени начала
-        this.setState({ startTime });
-        this.intervalId = setInterval(this.updateTypingSpeed, 1000);  // Установка интервала для обновления скорости печати каждую секунду
     }
 
     componentWillUnmount() {
@@ -121,12 +121,23 @@ class Main extends Component {
                     ? prevState.errorCount + 1
                     : prevState.errorCount;
             userInput[lastWordIndex] += key;
+
+            // Начало отсчета времени и запуска интервала при первом вводе символа
+            let { startTime, isTypingStarted } = prevState;
+            if (!isTypingStarted) {
+                startTime = new Date();
+                isTypingStarted = true;
+                this.intervalId = setInterval(this.updateTypingSpeed, 1000); // Установка интервала для обновления скорости печати каждую секунду
+            }
+
             return {
                 userInput,
                 keyPressCount: prevState.keyPressCount + 1,
                 keyEvents: [...prevState.keyEvents, event],
                 cursorPosition: prevState.cursorPosition + 1,
                 errorCount,
+                startTime,
+                isTypingStarted
             };
         });
     };
@@ -159,18 +170,14 @@ class Main extends Component {
     }
 
     render() {
-        const { keyPressCount, cursorPosition, userInput, errorCount, typingSpeed, startTime } = this.state;
+        const { keyPressCount, cursorPosition, userInput, errorCount, typingSpeed, startTime, isTypingStarted } = this.state;
         const accuracy = this.calculateAccuracy();
         const currentTime = new Date();
-        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+        const elapsedTime = isTypingStarted ? Math.floor((currentTime - startTime) / 1000) : 0;
 
         return (
             <div className="main-container">
                 <Statistics
-                    keyPressCount={keyPressCount}
-                    cursorPosition={cursorPosition}
-                    userInput={userInput}
-                    errorCount={errorCount}
                     accuracy={accuracy}
                     typingSpeed={typingSpeed}
                     elapsedTime={elapsedTime}
@@ -181,98 +188,6 @@ class Main extends Component {
                     keyPressCount={keyPressCount}
                     cursorPosition={cursorPosition}
                 />
-            </div>
-        );
-    }
-}
-
-// Компонент для отображения статистики
-class Statistics extends Component {
-    // Форматирование времени
-    formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    }
-
-    // Форматирование скорости печати
-    formatSpeed(seconds, keyPressCount) {
-        return `${(keyPressCount / seconds * 60).toFixed(2)}`;
-    }
-
-    // Форматирование точности
-    formatAccuracy(correctCount, errorCount) {
-        const totalCount = correctCount + errorCount;
-        return `${correctCount}/${totalCount} (${(correctCount / totalCount * 100).toFixed(2)} %)`;
-    }
-
-    render() {
-        const { keyPressCount, cursorPosition, userInput, errorCount, accuracy, typingSpeed, elapsedTime } = this.props;
-        const correctCount = keyPressCount - errorCount;
-
-        return (
-            <div className="statistics">
-                <p>Time Elapsed: {this.formatTime(elapsedTime)}</p>
-                <p>Key Press Count: {keyPressCount}</p>
-                <p>Cursor Position: {cursorPosition}</p>
-                <p>User Input: {userInput.join(' ')}</p>
-                <p>Error Count: {errorCount}</p>
-                <p>Accuracy: {this.formatAccuracy(correctCount, errorCount)}</p>
-                <p>Typing Speed: {this.formatSpeed(elapsedTime, keyPressCount)} chars/min</p>
-            </div>
-        );
-    }
-}
-
-// Компонент для отображения игры
-class Game extends Component {
-    // Определение цвета символа (правильный/неправильный/не введен)
-    getColor = (expectedSymbol, inputSymbol) => {
-        if (inputSymbol === '') {
-            return 'gray';
-        }
-        return expectedSymbol === inputSymbol ? 'green' : 'red';
-    };
-
-    // Отрисовка слова с подсветкой символов
-    renderWord = (word, wordIndex, maxWordLength, charCountRef) => {
-        return (
-            <span key={wordIndex}>
-                {Array.from({ length: maxWordLength }).map((_, symbolIndex) => {
-                    const expectedSymbol = word[symbolIndex] || '';  // Существующий символ или пустая строка
-                    const inputWord = this.props.userInput[wordIndex] || '';
-                    const inputSymbol = inputWord[symbolIndex] || '';  // Существующий символ или пустая строка
-                    const color = this.getColor(expectedSymbol, inputSymbol);
-                    const showCursor = charCountRef.current === this.props.cursorPosition;
-                    charCountRef.current++;
-                    return (
-                        <span key={wordIndex + '-' + symbolIndex} style={{ position: 'relative', color: color }}>
-                            {inputSymbol || expectedSymbol}
-                            {showCursor && <span className="cursor"></span>}
-                        </span>
-                    );
-                })}
-                <span style={{ visibility: 'hidden' }}>{charCountRef.current++}</span>
-            </span>
-        );
-    }
-
-    render() {
-        const charCountRef = { current: 0 };
-        return (
-            <div>
-                <p className="main-text">
-                    <b>
-                        {this.props.expectedText.map((word, wordIndex) => {
-                            const maxWordLength = Math.max(
-                                this.props.expectedText[wordIndex]?.length || 0,
-                                this.props.userInput[wordIndex]?.length || 0
-                            ); // Определение длины самого длинного слова по индексу
-                            return this.renderWord(word, wordIndex, maxWordLength, charCountRef);
-                        })}
-                    </b>
-                </p>
-                <p className="main-text">User Input: {this.props.userInput.join(' ')}</p>
             </div>
         );
     }

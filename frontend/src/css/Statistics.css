@@ -1,0 +1,22 @@
+/* Statistics.css */
+.statistics {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+.stat-item span {
+    margin-left: 8px;
+}
+
+.stat-item svg {
+    font-size: 1.5em;
+    color: #333;
+}
