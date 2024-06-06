@@ -159,8 +159,10 @@ class Main extends Component {
     }
 
     render() {
-        const { keyPressCount, cursorPosition, userInput, errorCount, typingSpeed } = this.state;
+        const { keyPressCount, cursorPosition, userInput, errorCount, typingSpeed, startTime } = this.state;
         const accuracy = this.calculateAccuracy();
+        const currentTime = new Date();
+        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
 
         return (
             <div className="main-container">
@@ -171,6 +173,7 @@ class Main extends Component {
                     errorCount={errorCount}
                     accuracy={accuracy}
                     typingSpeed={typingSpeed}
+                    elapsedTime={elapsedTime}
                 />
                 <Game
                     expectedText={this.state.expectedText}
@@ -185,16 +188,37 @@ class Main extends Component {
 
 // Компонент для отображения статистики
 class Statistics extends Component {
+    // Форматирование времени
+    formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    // Форматирование скорости печати
+    formatSpeed(seconds, keyPressCount) {
+        return `${(keyPressCount / seconds * 60).toFixed(2)}`;
+    }
+
+    // Форматирование точности
+    formatAccuracy(correctCount, errorCount) {
+        const totalCount = correctCount + errorCount;
+        return `${correctCount}/${totalCount} (${(correctCount / totalCount * 100).toFixed(2)} %)`;
+    }
+
     render() {
-        const { keyPressCount, cursorPosition, userInput, errorCount, accuracy, typingSpeed } = this.props;
+        const { keyPressCount, cursorPosition, userInput, errorCount, accuracy, typingSpeed, elapsedTime } = this.props;
+        const correctCount = keyPressCount - errorCount;
+
         return (
             <div className="statistics">
+                <p>Time Elapsed: {this.formatTime(elapsedTime)}</p>
                 <p>Key Press Count: {keyPressCount}</p>
                 <p>Cursor Position: {cursorPosition}</p>
                 <p>User Input: {userInput.join(' ')}</p>
                 <p>Error Count: {errorCount}</p>
-                <p>Accuracy: {accuracy.toFixed(2)}%</p>
-                <p>Typing Speed: {typingSpeed.toFixed(2)} chars/min</p>
+                <p>Accuracy: {this.formatAccuracy(correctCount, errorCount)}</p>
+                <p>Typing Speed: {this.formatSpeed(elapsedTime, keyPressCount)} chars/min</p>
             </div>
         );
     }
@@ -210,7 +234,7 @@ class Game extends Component {
         return expectedSymbol === inputSymbol ? 'green' : 'red';
     };
 
-    // Отображение слова с подсветкой символов
+    // Отрисовка слова с подсветкой символов
     renderWord = (word, wordIndex, maxWordLength, charCountRef) => {
         return (
             <span key={wordIndex}>
