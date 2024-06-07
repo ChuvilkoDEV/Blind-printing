@@ -34,10 +34,13 @@ const Keyboard = () => {
                         {line.map((key, keyIndex) => (
                             <div
                                 key={keyIndex}
-                                className={`key ${key.sup ? 'sup' : ''} ${key.main === 'Space' ? 'space' : ''} ${key.main.includes('Shift') ? 'shift' : ''}`}
+                                className={`key ${key.type} f${key.finger}`}
                             >
-                                <span className="main">{key.main}
-                                    {key.sup && <sup className="sup">{key.sup}</sup>}
+                                <span className="main">
+                                    {key.main}
+                                    {key.sup && <sup className="sup">
+                                        {key.sup}
+                                    </sup>}
                                 </span>
                             </div>
                         ))}

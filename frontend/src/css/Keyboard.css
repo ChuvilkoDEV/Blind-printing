@@ -1,5 +1,3 @@
-/* Keyboard.css */
-
 .keyboard {
     display: flex;
     flex-direction: column;
@@ -26,6 +24,14 @@
     max-width: 60px;
     box-sizing: border-box;
     position: relative;
+    font-weight: bold;
+    height: 60px;
+    line-height: 40px; /* Для вертикального выравнивания текста */
+}
+
+.key.special {
+    font-size: 12px;
+    font-weight: normal;
 }
 
 .key .main {
@@ -34,8 +40,8 @@
 
 .key .sup {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: 2px;
+    right: 2px;
     font-size: 10px;
     color: #666;
 }
@@ -46,12 +52,37 @@
     color: #888;
 }
 
-.key.space {
-    flex: 7;
-}
-
+/* Styles for special keys */
 .key.shift {
     flex: 2;
+    max-width: 100px;
+}
+
+.key.space {
+    flex: 7;
+    max-width: none;
+    height: 60px; /* Высота пробела */
+    line-height: 60px; /* Вертикальное выравнивание текста */
+}
+
+.key.enter {
+    flex: 2;
+    max-width: 100px;
+}
+
+.key.caps-lock {
+    flex: 2;
+    max-width: 100px;
+}
+
+.key.tab {
+    flex: 2;
+    max-width: 80px;
+}
+
+.key.backspace {
+    flex: 2;
+    max-width: 100px;
 }
 
 .select {
@@ -77,3 +108,11 @@
 .close {
     display: none;
 }
+
+/* Color styles based on finger */
+.key.f5 { background-color: #D8BFD8; }  /* Thistle */
+.key.f4 { background-color: #ADD8E6; }  /* Light Blue */
+.key.f3 { background-color: #90EE90; }  /* Light Green */
+.key.f2 { background-color: #FFD700; }  /* Gold */
+.key.f1 { background-color: #FFA07A; }  /* Light Salmon */
+.key.fthumb { background-color: #F5F5DC; }  /* Beige */
