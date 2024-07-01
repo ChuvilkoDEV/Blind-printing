@@ -35,7 +35,7 @@ export const layouts = {
             { main: "\\", sup: "/", finger: "5", type: "" }
         ],
         [
-            { main: "Caps Lock", sup: null, finger: "5", type: "caps-lock" },
+            { main: "Caps", sup: null, finger: "5", type: "caps-lock" },
             { main: "Ф", sup: null, finger: "5", type: "" },
             { main: "Ы", sup: null, finger: "4", type: "" },
             { main: "В", sup: null, finger: "3", type: "" },

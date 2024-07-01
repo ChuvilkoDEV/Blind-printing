@@ -1,4 +1,5 @@
 import Header from './components/Header';
+import Sidebar from './components/Sidebar';
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Main from "./components/Main/Main";
@@ -9,7 +10,8 @@ import PasswordReset from './components/PasswordReset';
 
 function App() {
   return (<>
-    <Header />
+    {/* <Header /> */}
+    <Sidebar/>
     <Routes>
       <Route path="/" element={<Main />} />
       <Route path="/signup" element={<SignUp />} />
