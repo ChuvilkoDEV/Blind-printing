@@ -7,9 +7,12 @@ import Theory from './components/Theory';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import PasswordReset from './components/PasswordReset';
+import Test from './components/Test';
+
+import './css/App.css'
 
 function App() {
-  return (<>
+  return (<div className="App">
     {/* <Header /> */}
     <Sidebar/>
     <Routes>
@@ -18,8 +21,9 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/reset" element={<PasswordReset />} />
       <Route path="theory/" element={<Theory />} />
+      <Route path="/test" element={<Test />} />
     </Routes>
-    </>);
+    </div>);
 }
 
 export default App;

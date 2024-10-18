@@ -1,10 +1,10 @@
 @font-face {
-  font-family: 'MonaspaceNeon';
-  src: url('../fonts/MonaspaceNeon-Regular.otf') format('opentype');
+  font-family: 'FedraSansPro';
+  src: url('../fonts/FedraSansPro.ttf') format('truetype');
 }
 
 body {
-  font-family: 'MonaspaceNeon', 'Courier New', Courier, monospace; /* Используем новый шрифт */
+  font-family: 'FedraSansPro', 'Courier New', Courier, monospace; /* Используем новый шрифт */
   font-size: 20px;
   margin: 0; /* Убираем отступы по умолчанию */
   padding: 0; /* Убираем внутренние отступы по умолчанию */

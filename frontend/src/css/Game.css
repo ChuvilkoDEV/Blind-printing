@@ -30,7 +30,7 @@
 }
 
 .game-text {
-    font-family: 'MonaspaceNeon', 'Courier New', Courier, monospace;
+    font-family: 'FedraSansPro', 'Courier New', Courier, monospace;
     font-size: 20px;
     white-space: normal;
     /* Allow normal line breaks */
